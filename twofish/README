@@ -1,0 +1,10 @@
+Install:
+	$ sudo apt-gen update
+	$ sudo apt-get install libtwofish-dev
+	$ make
+
+Run test:
+	$ make test
+
+Uninstall:
+	$ make clean
