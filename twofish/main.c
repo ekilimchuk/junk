@@ -29,6 +29,9 @@ int main(int argc, char **argv)
 		keylen = sizeof(key);
 
 	Twofish_initialise();
+
+	strncpy((char *) key, argv[1], sizeof(key));
+	printf("Key: %s\n", key);
 	
 	memset(inblock, 0, sizeof(inblock));
 	Twofish_prepare_key(key, keylen, &xkey);
