@@ -2,12 +2,12 @@ all: main.c
 	gcc main.c -ltwofish -o main
 
 test:
-	echo
-	./main key1 qwerty1
-	echo
-	./main key2 qwerty2
-	echo
-	./main key3 qwerty3
+	echo -n qwerty1 | ./main -e key1 | ./main -d key1
+	echo -n qwerty1 | ./main -e key2 | ./main -d key2
+	echo -n qwerty1 | ./main -e key1 | ./main -d key2
+	echo -n qwerty2 | ./main -e key1 | ./main -d key1
+	echo -n qwerty2 | ./main -e key2 | ./main -d key2
+	echo -n qwerty2 | ./main -e key1 | ./main -d key2
 
 clean:
 	rm -f main

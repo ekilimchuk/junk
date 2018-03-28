@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <twofish.h>
 
@@ -12,15 +13,19 @@ int main(int argc, char **argv)
 	Twofish_Byte key[32];
 	Twofish_key xkey;
 	Twofish_Byte inblock[16], outblock[16];
+	int encrypt = 1;	
 
 	if (argc < 3) {
-		fprintf(stderr, "Run: %s <key> <text>\n", argv[0]);
+		fprintf(stderr, "Run: %s <-e|-d> <text>\n", argv[0]);
 		return 1;
 	}
 
+	if (strcmp(argv[1], "-d") == 0)
+		encrypt = 0;
+
 	memset(key, 0, sizeof(key));
 
-	keylen = strlen(argv[1]);
+	keylen = strlen(argv[2]);
 	if (keylen < MIN_KEYLEN) {
 		fprintf(stderr, "Key material too short.\n");
 		return 1;
@@ -29,24 +34,19 @@ int main(int argc, char **argv)
 		keylen = sizeof(key);
 
 	Twofish_initialise();
-
-	strncpy((char *) key, argv[1], sizeof(key));
-	printf("Key: %s\n", key);
-	
+	strncpy((char *) key, argv[2], sizeof(key));	
 	memset(inblock, 0, sizeof(inblock));
 	Twofish_prepare_key(key, keylen, &xkey);
-	strcpy(inblock, argv[2]);
-	printf("original: %s\n", inblock);
-	Twofish_encrypt(&xkey, inblock, outblock);
-	printf("encrypt: %s\n", outblock);
-	
-	memset(inblock, 0, sizeof(inblock));
-	Twofish_prepare_key(key, keylen, &xkey);
-	strcpy(inblock, outblock);
-	printf("original: %s\n", inblock);
 
-	Twofish_decrypt(&xkey, inblock, outblock);
-	printf("decrypt: %s\n", outblock);
-
+	while (read(STDIN_FILENO, inblock, sizeof(inblock)) > 0) {
+		if (encrypt) {
+			Twofish_encrypt(&xkey, inblock, outblock);
+			write(STDOUT_FILENO, outblock, sizeof(outblock));
+		} else {	
+			Twofish_decrypt(&xkey, inblock, outblock);
+			printf("%s\n", outblock);
+		}
+		memset(inblock, 0, sizeof(inblock));
+	}
 	return 0;
 }
