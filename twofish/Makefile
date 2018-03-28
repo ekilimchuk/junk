@@ -1,13 +1,12 @@
 all: main.c
-	gcc main.c -ltwofish -o main
+	gcc main.c -std=c99 -ltwofish -o main
 
 test:
-	echo -n qwerty1 | ./main -e key1 | ./main -d key1
-	echo -n qwerty1 | ./main -e key2 | ./main -d key2
-	echo -n qwerty1 | ./main -e key1 | ./main -d key2
-	echo -n qwerty2 | ./main -e key1 | ./main -d key1
-	echo -n qwerty2 | ./main -e key2 | ./main -d key2
-	echo -n qwerty2 | ./main -e key1 | ./main -d key2
+	openssl rand -base64 500 > selftest_t.tmp
+	./main -e key1 > selftest_e.tmp < selftest_t.tmp
+	./main -d key1 > selftest_d.tmp < selftest_e.tmp
+	diff selftest_t.tmp selftest_d.tmp
+	md5sum selftest_t.tmp selftest_d.tmp
 
 clean:
-	rm -f main
+	rm -f ./main selftest_[ted].tmp

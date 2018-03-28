@@ -6,17 +6,19 @@
 #include <twofish.h>
 
 #define MIN_KEYLEN 2
+#define BLOCK_SIZE 16
+#define KEY_SIZE 32
 
 int main(int argc, char **argv)
 {
 	size_t keylen;
-	Twofish_Byte key[32];
+	Twofish_Byte key[KEY_SIZE];
 	Twofish_key xkey;
-	Twofish_Byte inblock[16], outblock[16];
+	Twofish_Byte inblock[BLOCK_SIZE], outblock[BLOCK_SIZE];
 	int encrypt = 1;	
 
 	if (argc < 3) {
-		fprintf(stderr, "Run: %s <-e|-d> <text>\n", argv[0]);
+		fprintf(stderr, "Run: %s <-e|-d> <key>\n", argv[0]);
 		return 1;
 	}
 
@@ -36,6 +38,7 @@ int main(int argc, char **argv)
 	Twofish_initialise();
 	strncpy((char *) key, argv[2], sizeof(key));	
 	memset(inblock, 0, sizeof(inblock));
+	memset(outblock, 0, sizeof(outblock));
 	Twofish_prepare_key(key, keylen, &xkey);
 
 	while (read(STDIN_FILENO, inblock, sizeof(inblock)) > 0) {
@@ -44,9 +47,11 @@ int main(int argc, char **argv)
 			write(STDOUT_FILENO, outblock, sizeof(outblock));
 		} else {	
 			Twofish_decrypt(&xkey, inblock, outblock);
-			printf("%s\n", outblock);
+			for (int i = 0; i < BLOCK_SIZE && outblock[i] != '\0'; i++)
+				printf("%c", outblock[i]);
 		}
 		memset(inblock, 0, sizeof(inblock));
+		memset(outblock, 0, sizeof(outblock));
 	}
 	return 0;
 }
