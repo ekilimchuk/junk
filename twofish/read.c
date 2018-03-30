@@ -69,10 +69,11 @@ int stretch_pswd(char *pswd, char *salt, int iter, char *obuf, char *err)
 	memcpy(pwd_salt + strlen(pswd), salt, 32);
 
 	SHA256(pwd_salt, strlen(pwd_salt), obuf);
+
+	free(pwd_salt);
+
 	for (int i = 0; i < iter; i++) {
-		for (int j = 0; j < 32; j++) {
-			tmpbuf[j] = obuf[j];
-		}
+		memcpy(tmpbuf, obuf, 32);
 		SHA256(tmpbuf, 32, obuf);
 	}
 	return 0;
