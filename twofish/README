@@ -1,6 +1,6 @@
 Install:
 	$ sudo apt-gen update
-	$ sudo apt-get install libtwofish-dev
+	$ sudo apt-get install libtwofish-dev libssl-dev
 	$ make
 
 Run test:

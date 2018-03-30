@@ -6,17 +6,15 @@
 #include <unistd.h>
 #include <string.h>
 #include <openssl/sha.h>
+#include <twofish.h>
 
 struct Psafe3 {
 	char tag[4];
 	char salt[32];
 	char iter[4];
 	char p[32];
-	char h[256];
-	char b1[16];
-	char b2[16];
-	char b3[16];
-	char b4[16];
+	char b12[32];
+	char b34[32];
 	char iv[16];
 //	char hdr[];
 	char db[];
@@ -71,13 +69,39 @@ int stretch_pswd(char *pswd, char *salt, int iter, char *obuf, char *err)
 	memcpy(pwd_salt + strlen(pswd), salt, 32);
 
 	SHA256(pwd_salt, strlen(pwd_salt), obuf);
-	for (long int i = 0; i <= iter; i++) {
+	for (int i = 0; i < iter; i++) {
 		for (int j = 0; j < 32; j++) {
 			tmpbuf[j] = obuf[j];
 		}
 		SHA256(tmpbuf, 32, obuf);
 	}
 	return 0;
+}
+
+int check_key(char *key, char *p, char *err)
+{
+	char obuf[32];
+
+	SHA256(key, 32, obuf);
+	if (strncmp(p, obuf, 32)) {
+		strcpy(err, "invalid password");
+		return 1;
+	}
+	return 0;
+}
+
+void twofish_ecb(char *key, char *b, int count, char *res)
+{
+	Twofish_key xkey;
+	Twofish_Byte inblock[16], outblock[16];
+
+	Twofish_initialise();
+	Twofish_prepare_key(key, 32, &xkey);
+	for (int i = 0; i < count; i++) {
+		memcpy(inblock, &b[i*16], 16);
+		Twofish_decrypt(&xkey, inblock, outblock);
+		memcpy(&res[i*16], outblock, 16);
+	}
 }
 
 void print_error(char *err)
@@ -98,8 +122,10 @@ int main(int argc, char **argv)
 	char *addr;
 	struct Psafe3 *psafe3_data;
 	size_t size, s;
-	char err[100] = "";
-	char p[32] = "";
+	char err[100];
+	char key[32];
+	char key_k[32];
+	char key_l[32];
 
 	if (argc < 2) {
 		fprintf(stderr, "Run: %s <file.psafe3>\n", argv[0]);
@@ -116,18 +142,30 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	if (stretch_pswd("bogus12345", (*psafe3_data).salt, *((int *)(*psafe3_data).iter), p, err)) {
+	if (stretch_pswd("bogus12345",psafe3_data->salt, *((int *)psafe3_data->iter), key, err)) {
 		print_error(err);
 		return 1;
 	}
 
+	if (check_key(key, psafe3_data->p, err)) {
+		print_error(err);
+		return 1;
+	}
+
+	twofish_ecb(key, psafe3_data->b12, 2, key_k);
+	twofish_ecb(key, psafe3_data->b34, 2, key_l);
+
 	// debug
 	printf("PWS3:\n");
-	print_hex_debug((*psafe3_data).tag, sizeof((*psafe3_data).tag));
-	printf("P:\n");
-	print_hex_debug((*psafe3_data).p, sizeof((*psafe3_data).p));
-	printf("sha256:\n");
-	print_hex_debug(p, sizeof(p));
+	print_hex_debug(psafe3_data->tag, sizeof(psafe3_data->tag));
+	printf("h(p'):\n");
+	print_hex_debug(psafe3_data->p, sizeof(psafe3_data->p));
+	printf("key:\n");
+	print_hex_debug(key, sizeof(key));
+	printf("k:\n");
+	print_hex_debug(key_k, sizeof(key_k));
+	printf("l:\n");
+	print_hex_debug(key_l, sizeof(key_l));
 
 	return 0;
 }
