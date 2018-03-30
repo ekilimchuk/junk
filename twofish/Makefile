@@ -4,7 +4,7 @@ main: main.c
 	gcc main.c -std=c99 -ltwofish -o main
 
 read: read.c
-	gcc read.c -std=c99 -o read
+	gcc read.c -std=c99 -lcrypto -o read
 
 test:
 	openssl rand -base64 500 > selftest_t.tmp
