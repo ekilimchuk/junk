@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <openssl/sha.h>
-#include <stdint.h>
 
 struct Psafe3 {
 	char tag[4];
@@ -58,7 +57,7 @@ int get_psafe3_data(char **addr, struct Psafe3 **psafe3_data, char *err)
 	return 0;
 }
 
-int stretch_pswd(char *pswd, char *salt, int32_t iter, char *obuf, char *err)
+int stretch_pswd(char *pswd, char *salt, int iter, char *obuf, char *err)
 {
 	char tmpbuf[32];
 
@@ -100,7 +99,6 @@ int main(int argc, char **argv)
 	struct Psafe3 *psafe3_data;
 	size_t size, s;
 	char err[100] = "";
-	int32_t iter = 0;
 	char p[32] = "";
 
 	if (argc < 2) {
@@ -118,10 +116,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	// little-endian
-	memcpy(&iter, (*psafe3_data).iter, sizeof((*psafe3_data).iter));
-
-	if (stretch_pswd("bogus12345", (*psafe3_data).salt, iter, p, err)) {
+	if (stretch_pswd("bogus12345", (*psafe3_data).salt, *((int *)(*psafe3_data).iter), p, err)) {
 		print_error(err);
 		return 1;
 	}
