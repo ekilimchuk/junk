@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <openssl/sha.h>
+#include <openssl/hmac.h>
 #include <twofish.h>
 
 struct Psafe3 {
@@ -22,7 +23,15 @@ struct Psafe3 {
 //	char hmac;
 };
 
-int open_psafe3(char *fname, char **addr, char *err)
+void print_hex_debug(char *p, int n)
+{
+	for (int i = 0; i < n; i++) {
+		 printf("%02x ", p[i]);
+	}
+	printf("\n");
+}
+
+int open_psafe3(char *fname, char **addr, int *fsize, char *err)
 {
 	int fd;
 	struct stat sb;
@@ -41,16 +50,22 @@ int open_psafe3(char *fname, char **addr, char *err)
 		strcpy(err, "mmap");
 		return 1;
 	}
+	*fsize = sb.st_size;
 	strcpy(err, "");
 	return 0;
 }
 
-int get_psafe3_data(char **addr, struct Psafe3 **psafe3_data, char *err)
+int get_psafe3_data(char **addr, struct Psafe3 **psafe3_data, int *fsize, int *dbsize, char *err)
 {
 	if (strncmp(*addr, "PWS3", 4)) {
 		strcpy(err, "is non PWS3");
 		return 1;
 	}
+	if (strncmp(*addr + *fsize - 16 - 32, "PWS3-EOFPWS3-EOF", 16)) {
+		strcpy(err, "is non PWS3 - do not match end file with PWS3-EOFPWS3-EOF");
+		return 1;
+	}
+	*dbsize = *fsize - 16 - 32 - sizeof(**psafe3_data);
 	*psafe3_data = (void*) *addr;
 	return 0;
 }
@@ -105,45 +120,79 @@ void twofish_ecb(char *key, char *b, int count, char *res)
 	}
 }
 
+void str_xor(char *s1, char *s2, int count, char *res)
+{
+	for (int i = 0; i < count; i++)
+		res[i] = s1[i] ^ s2[i];
+}
+
+void twofish_cbc(char *iv, char *key, char *b, int count, char *res)
+{
+	Twofish_key xkey;
+	Twofish_Byte inblock[16], outblock[16];
+	char x[16];
+	memcpy(x, iv, 16);
+	Twofish_initialise();
+	Twofish_prepare_key(key, 32, &xkey);
+	for (int i = 0; i < count; i++) {
+		memcpy(inblock, &b[i*16], 16);
+		Twofish_decrypt(&xkey, inblock, outblock);
+		str_xor(outblock, x, 16, &res[i*16]);
+		strncpy(x, inblock, 16);
+	}
+}
+
+void twofish_hmac_check(char key_l[32], char *data, char mac[32])
+{
+	unsigned char* hmac;
+	printf("key_l: ");
+	print_hex_debug(key_l, 32);
+	printf("\n");
+	printf("mac: ");
+	print_hex_debug(mac, 32);
+	printf("\n");
+	hmac = HMAC(EVP_sha256(), key_l, 32, (unsigned char*)data, 2368, NULL, NULL);
+	printf("hmac: ");
+	print_hex_debug(hmac, 32);
+	printf("\n");
+/*	for (int i=0; i<2368; i++)
+		printf("%c", data[i]);
+	printf("\n");/**/
+}
+
 void print_error(char *err)
 {
 	fprintf(stderr, "Error: %s!\n", err);
 }
 
-void print_hex_debug(char *p, int n)
-{
-	for (int i = 0; i < n; i++) {
-		 printf("%02x ", p[i]);
-	}
-	printf("\n");
-}
 
 int main(int argc, char **argv)
 {
 	char *addr;
 	struct Psafe3 *psafe3_data;
-	size_t size, s;
 	char err[100];
 	char key[32];
 	char key_k[32];
 	char key_l[32];
+	char *res;
+	int fsize = 0, dbsize = 0;
 
 	if (argc < 2) {
 		fprintf(stderr, "Run: %s <file.psafe3>\n", argv[0]);
 		return 1;
 	}
 	
-	if (open_psafe3(argv[1], &addr, err)) {
+	if (open_psafe3(argv[1], &addr, &fsize, err)) {
 		print_error(err);
 		return 1;
 	}
 
-	if (get_psafe3_data(&addr, &psafe3_data, err)) {
+	if (get_psafe3_data(&addr, &psafe3_data, &fsize, &dbsize, err)) {
 		print_error(err);
 		return 1;
 	}
 
-	if (stretch_pswd("bogus12345",psafe3_data->salt, *((int *)psafe3_data->iter), key, err)) {
+	if (stretch_pswd("bogus12345", psafe3_data->salt, *((int *)psafe3_data->iter), key, err)) {
 		print_error(err);
 		return 1;
 	}
@@ -155,7 +204,11 @@ int main(int argc, char **argv)
 
 	twofish_ecb(key, psafe3_data->b12, 2, key_k);
 	twofish_ecb(key, psafe3_data->b34, 2, key_l);
-
+	res = malloc(dbsize);
+	printf("fsize: %i\n", fsize);
+	printf("dbsize: %i\n", dbsize);
+	twofish_cbc(psafe3_data->iv, key_k, psafe3_data->db, dbsize/16, res);
+	twofish_hmac_check(key_l, res, psafe3_data->db + dbsize + 16);
 	// debug
 	printf("PWS3:\n");
 	print_hex_debug(psafe3_data->tag, sizeof(psafe3_data->tag));
@@ -167,6 +220,9 @@ int main(int argc, char **argv)
 	print_hex_debug(key_k, sizeof(key_k));
 	printf("l:\n");
 	print_hex_debug(key_l, sizeof(key_l));
-
+	printf("\n");
+/**/	for (int i=0; i<dbsize; i++)
+		printf("%c", res[i]);
+	printf("\n");/**/
 	return 0;
 }
