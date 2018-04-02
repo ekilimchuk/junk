@@ -9,6 +9,10 @@
 #include <openssl/hmac.h>
 #include <twofish.h>
 
+#define TWOFISH_BLOCK_SIZE 16
+#define TWOFISH_KEY_SIZE 32
+#define KEY_SIZE 32
+
 struct Psafe3 {
 	char tag[4];
 	char salt[32];
@@ -96,7 +100,7 @@ int stretch_pswd(char *pswd, char *salt, int iter, char *obuf, char *err)
 
 int check_key(char *key, char *p, char *err)
 {
-	char obuf[32];
+	char obuf[KEY_SIZE];
 
 	SHA256(key, 32, obuf);
 	if (strncmp(p, obuf, 32)) {
@@ -109,14 +113,14 @@ int check_key(char *key, char *p, char *err)
 void twofish_ecb(char *key, char *b, int count, char *res)
 {
 	Twofish_key xkey;
-	Twofish_Byte inblock[16], outblock[16];
+	Twofish_Byte inblock[TWOFISH_BLOCK_SIZE], outblock[TWOFISH_BLOCK_SIZE];
 
 	Twofish_initialise();
-	Twofish_prepare_key(key, 32, &xkey);
+	Twofish_prepare_key(key, TWOFISH_KEY_SIZE, &xkey);
 	for (int i = 0; i < count; i++) {
-		memcpy(inblock, &b[i*16], 16);
+		memcpy(inblock, &b[i*TWOFISH_BLOCK_SIZE], TWOFISH_BLOCK_SIZE);
 		Twofish_decrypt(&xkey, inblock, outblock);
-		memcpy(&res[i*16], outblock, 16);
+		memcpy(&res[i * TWOFISH_BLOCK_SIZE], outblock, TWOFISH_BLOCK_SIZE);
 	}
 }
 
@@ -129,35 +133,46 @@ void str_xor(char *s1, char *s2, int count, char *res)
 void twofish_cbc(char *iv, char *key, char *b, int count, char *res)
 {
 	Twofish_key xkey;
-	Twofish_Byte inblock[16], outblock[16];
-	char x[16];
-	memcpy(x, iv, 16);
+	Twofish_Byte inblock[TWOFISH_BLOCK_SIZE], outblock[TWOFISH_BLOCK_SIZE];
+	char x[TWOFISH_BLOCK_SIZE];
+	memcpy(x, iv, TWOFISH_BLOCK_SIZE);
 	Twofish_initialise();
-	Twofish_prepare_key(key, 32, &xkey);
+	Twofish_prepare_key(key, TWOFISH_KEY_SIZE, &xkey);
 	for (int i = 0; i < count; i++) {
-		memcpy(inblock, &b[i*16], 16);
+		memcpy(inblock, &b[i * TWOFISH_BLOCK_SIZE], TWOFISH_BLOCK_SIZE);
 		Twofish_decrypt(&xkey, inblock, outblock);
-		str_xor(outblock, x, 16, &res[i*16]);
-		strncpy(x, inblock, 16);
+		str_xor(outblock, x, TWOFISH_BLOCK_SIZE, &res[i * TWOFISH_BLOCK_SIZE]);
+		memcpy(x, inblock, TWOFISH_BLOCK_SIZE);
 	}
 }
 
-void twofish_hmac_check(char key_l[32], char *data, char mac[32])
+void twofish_hmac_check(char key_l[KEY_SIZE], char *data, int dsize, char mac[KEY_SIZE])
 {
 	unsigned char* hmac;
-	printf("key_l: ");
-	print_hex_debug(key_l, 32);
-	printf("\n");
-	printf("mac: ");
-	print_hex_debug(mac, 32);
-	printf("\n");
-	hmac = HMAC(EVP_sha256(), key_l, 32, (unsigned char*)data, 2368, NULL, NULL);
-	printf("hmac: ");
-	print_hex_debug(hmac, 32);
-	printf("\n");
-/*	for (int i=0; i<2368; i++)
-		printf("%c", data[i]);
-	printf("\n");/**/
+	hmac = HMAC(EVP_sha256(), key_l, KEY_SIZE, (unsigned char*)data, dsize, NULL, NULL);
+}
+
+void read_fields(char *data, int dsize)
+{
+	struct item {
+		int len;
+		char type;
+		char data[];
+	};
+	struct item *p;
+	p = (void*) data;
+	while((void*)&p[0] < (void*)&data[0] + dsize) {
+		printf("item: %d, %02x\n", p->len, p->type);
+		int i;
+		for (i = 0; i < p->len; i++)
+			printf("%c", p->data[i]);
+		printf("\n");
+		if ((5 + i) % TWOFISH_BLOCK_SIZE != 0) {
+			p = (void*)&p->data[i] + TWOFISH_BLOCK_SIZE - (5 + i) % TWOFISH_BLOCK_SIZE;
+		} else {
+			p = (void*)&p->data[i];
+		}
+	}
 }
 
 void print_error(char *err)
@@ -165,15 +180,14 @@ void print_error(char *err)
 	fprintf(stderr, "Error: %s!\n", err);
 }
 
-
 int main(int argc, char **argv)
 {
 	char *addr;
 	struct Psafe3 *psafe3_data;
 	char err[100];
-	char key[32];
-	char key_k[32];
-	char key_l[32];
+	char key[KEY_SIZE];
+	char key_k[KEY_SIZE];
+	char key_l[KEY_SIZE];
 	char *res;
 	int fsize = 0, dbsize = 0;
 
@@ -205,11 +219,13 @@ int main(int argc, char **argv)
 	twofish_ecb(key, psafe3_data->b12, 2, key_k);
 	twofish_ecb(key, psafe3_data->b34, 2, key_l);
 	res = malloc(dbsize);
-	printf("fsize: %i\n", fsize);
-	printf("dbsize: %i\n", dbsize);
-	twofish_cbc(psafe3_data->iv, key_k, psafe3_data->db, dbsize/16, res);
-	twofish_hmac_check(key_l, res, psafe3_data->db + dbsize + 16);
+	twofish_cbc(psafe3_data->iv, key_k, psafe3_data->db, dbsize/TWOFISH_BLOCK_SIZE, res);
+	read_fields(res, dbsize);
+//	twofish_hmac_check(key_l, res, dbsize, psafe3_data->db + dbsize + 16);
+
 	// debug
+/*	printf("fsize: %i\n", fsize);
+	printf("dbsize: %i\n", dbsize);
 	printf("PWS3:\n");
 	print_hex_debug(psafe3_data->tag, sizeof(psafe3_data->tag));
 	printf("h(p'):\n");
@@ -220,8 +236,8 @@ int main(int argc, char **argv)
 	print_hex_debug(key_k, sizeof(key_k));
 	printf("l:\n");
 	print_hex_debug(key_l, sizeof(key_l));
-	printf("\n");
-/**/	for (int i=0; i<dbsize; i++)
+	printf("\n");/**/
+/*	for (int i=0; i<dbsize; i++)
 		printf("%c", res[i]);
 	printf("\n");/**/
 	return 0;
