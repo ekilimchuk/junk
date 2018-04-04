@@ -71,6 +71,9 @@ int get_psafe3_data(char **addr, struct Psafe3 **psafe3_data, int *fsize, int *d
 	}
 	*dbsize = *fsize - 16 - 32 - sizeof(**psafe3_data);
 	*psafe3_data = (void*) *addr;
+	printf("mac:\n");
+	print_hex_debug(*addr + *fsize - 32,  32);
+	printf("\n");
 	return 0;
 }
 
@@ -146,33 +149,38 @@ void twofish_cbc(char *iv, char *key, char *b, int count, char *res)
 	}
 }
 
-void twofish_hmac_check(char key_l[KEY_SIZE], char *data, int dsize, char mac[KEY_SIZE])
-{
-	unsigned char* hmac;
-	hmac = HMAC(EVP_sha256(), key_l, KEY_SIZE, (unsigned char*)data, dsize, NULL, NULL);
-}
-
-void read_fields(char *data, int dsize)
+void read_fields(char *data, char key_l[KEY_SIZE], int dsize)
 {
 	struct item {
 		int len;
 		char type;
 		char data[];
 	};
+	char hmac[KEY_SIZE];
+	unsigned int dlen;
+	HMAC_CTX ctx;
 	struct item *p;
+	HMAC_Init(&ctx, key_l, KEY_SIZE, EVP_sha256());
 	p = (void*) data;
 	while((void*)&p[0] < (void*)&data[0] + dsize) {
-		printf("item: %d, %02x\n", p->len, p->type);
-		int i;
-		for (i = 0; i < p->len; i++)
-			printf("%c", p->data[i]);
-		printf("\n");
-		if ((5 + i) % TWOFISH_BLOCK_SIZE != 0) {
-			p = (void*)&p->data[i] + TWOFISH_BLOCK_SIZE - (5 + i) % TWOFISH_BLOCK_SIZE;
+//		printf("item: %d, %02x\n", p->len, p->type);
+//		int i;
+//		if (p->type != 0xff)
+		HMAC_Update(&ctx, p->data, p->len);
+//		for (i = 0; i < p->len; i++)
+//			printf("%c", p->data[i]);
+//		printf("\n");
+		if ((5 + p->len) % TWOFISH_BLOCK_SIZE != 0) {
+			p = (void*)&p->data[p->len] + TWOFISH_BLOCK_SIZE - (5 + p->len) % TWOFISH_BLOCK_SIZE;
 		} else {
-			p = (void*)&p->data[i];
+			p = (void*)&p->data[p->len];
 		}
 	}
+	HMAC_Final(&ctx, hmac, &dlen);
+	HMAC_cleanup(&ctx);
+	printf("hmac:\n");
+	print_hex_debug(hmac, dlen);
+	printf("\n");
 }
 
 void print_error(char *err)
@@ -220,8 +228,7 @@ int main(int argc, char **argv)
 	twofish_ecb(key, psafe3_data->b34, 2, key_l);
 	res = malloc(dbsize);
 	twofish_cbc(psafe3_data->iv, key_k, psafe3_data->db, dbsize/TWOFISH_BLOCK_SIZE, res);
-	read_fields(res, dbsize);
-//	twofish_hmac_check(key_l, res, dbsize, psafe3_data->db + dbsize + 16);
+	read_fields(res, key_l, dbsize);
 
 	// debug
 /*	printf("fsize: %i\n", fsize);
