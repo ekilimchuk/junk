@@ -59,21 +59,23 @@ int open_psafe3(char *fname, char **addr, int *fsize, char *err)
 	return 0;
 }
 
-int get_psafe3_data(char **addr, struct Psafe3 **psafe3_data, int *fsize, int *dbsize, char *err)
+int get_psafe3_data(char **addr, struct Psafe3 **psafe3_data, int *fsize, int *dbsize, char *mac, char *err)
 {
+	if (*fsize < sizeof(**psafe3_data) + 16 + 32 ) {
+		strcpy(err, "It is not PWS3 file - the file size is smaller than the PWS3 header");
+		return 1;
+	}
 	if (strncmp(*addr, "PWS3", 4)) {
-		strcpy(err, "is non PWS3");
+		strcpy(err, "It is not PWS3 file");
 		return 1;
 	}
 	if (strncmp(*addr + *fsize - 16 - 32, "PWS3-EOFPWS3-EOF", 16)) {
-		strcpy(err, "is non PWS3 - do not match end file with PWS3-EOFPWS3-EOF");
+		strcpy(err, "It is not PWS3 file - nothing matches the end of file with \"PS3-EOFPWS3-EOF\"");
 		return 1;
 	}
 	*dbsize = *fsize - 16 - 32 - sizeof(**psafe3_data);
 	*psafe3_data = (void*) *addr;
-	printf("mac:\n");
-	print_hex_debug(*addr + *fsize - 32,  32);
-	printf("\n");
+	memcpy(mac, *addr + *fsize - 32, 32);
 	return 0;
 }
 
@@ -149,27 +151,21 @@ void twofish_cbc(char *iv, char *key, char *b, int count, char *res)
 	}
 }
 
-void read_fields(char *data, char key_l[KEY_SIZE], int dsize)
+int read_fields(char *data, char key_l[KEY_SIZE], int dsize, char *mac, char *hmac, char *err)
 {
 	struct item {
 		int len;
 		char type;
 		char data[];
 	};
-	char hmac[KEY_SIZE];
 	unsigned int dlen;
 	HMAC_CTX ctx;
 	struct item *p;
 	HMAC_Init(&ctx, key_l, KEY_SIZE, EVP_sha256());
 	p = (void*) data;
+
 	while((void*)&p[0] < (void*)&data[0] + dsize) {
-//		printf("item: %d, %02x\n", p->len, p->type);
-//		int i;
-//		if (p->type != 0xff)
 		HMAC_Update(&ctx, p->data, p->len);
-//		for (i = 0; i < p->len; i++)
-//			printf("%c", p->data[i]);
-//		printf("\n");
 		if ((5 + p->len) % TWOFISH_BLOCK_SIZE != 0) {
 			p = (void*)&p->data[p->len] + TWOFISH_BLOCK_SIZE - (5 + p->len) % TWOFISH_BLOCK_SIZE;
 		} else {
@@ -178,9 +174,11 @@ void read_fields(char *data, char key_l[KEY_SIZE], int dsize)
 	}
 	HMAC_Final(&ctx, hmac, &dlen);
 	HMAC_cleanup(&ctx);
-	printf("hmac:\n");
-	print_hex_debug(hmac, dlen);
-	printf("\n");
+	if (memcmp(mac, hmac, KEY_SIZE)) {
+		strcpy(err, "invalid hmac");
+		return 1;
+	}
+	return 0;
 }
 
 void print_error(char *err)
@@ -198,6 +196,8 @@ int main(int argc, char **argv)
 	char key_l[KEY_SIZE];
 	char *res;
 	int fsize = 0, dbsize = 0;
+	char mac[KEY_SIZE];
+	char hmac[KEY_SIZE];
 
 	if (argc < 2) {
 		fprintf(stderr, "Run: %s <file.psafe3>\n", argv[0]);
@@ -209,7 +209,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	if (get_psafe3_data(&addr, &psafe3_data, &fsize, &dbsize, err)) {
+	if (get_psafe3_data(&addr, &psafe3_data, &fsize, &dbsize, mac, err)) {
 		print_error(err);
 		return 1;
 	}
@@ -225,24 +225,41 @@ int main(int argc, char **argv)
 	}
 
 	twofish_ecb(key, psafe3_data->b12, 2, key_k);
-	twofish_ecb(key, psafe3_data->b34, 2, key_l);
-	res = malloc(dbsize);
-	twofish_cbc(psafe3_data->iv, key_k, psafe3_data->db, dbsize/TWOFISH_BLOCK_SIZE, res);
-	read_fields(res, key_l, dbsize);
 
-	// debug
-/*	printf("fsize: %i\n", fsize);
-	printf("dbsize: %i\n", dbsize);
-	printf("PWS3:\n");
-	print_hex_debug(psafe3_data->tag, sizeof(psafe3_data->tag));
+	twofish_ecb(key, psafe3_data->b34, 2, key_l);
+
+	res = malloc(dbsize);
+
+	twofish_cbc(psafe3_data->iv, key_k, psafe3_data->db, dbsize/TWOFISH_BLOCK_SIZE, res);
+	if (read_fields(res, key_l, dbsize, mac, hmac, err)) {
+		print_error(err);
+		return 1;
+	}
+
+// debug
+/**/	printf("fsize:\n");
+	printf("%i\n", fsize);
+	printf("\n");
+	printf("dbsize:\n");
+	printf("%i\n", dbsize);
+	printf("\n");
 	printf("h(p'):\n");
 	print_hex_debug(psafe3_data->p, sizeof(psafe3_data->p));
+	printf("\n");
 	printf("key:\n");
 	print_hex_debug(key, sizeof(key));
+	printf("\n");
 	printf("k:\n");
 	print_hex_debug(key_k, sizeof(key_k));
+	printf("\n");
 	printf("l:\n");
 	print_hex_debug(key_l, sizeof(key_l));
+	printf("\n");
+	printf("mac:\n");
+	print_hex_debug(mac, KEY_SIZE);
+	printf("\n");
+	printf("hmac:\n");
+	print_hex_debug(hmac, KEY_SIZE);
 	printf("\n");/**/
 /*	for (int i=0; i<dbsize; i++)
 		printf("%c", res[i]);
