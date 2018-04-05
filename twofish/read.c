@@ -151,7 +151,7 @@ void twofish_cbc(char *iv, char *key, char *b, int count, char *res)
 	}
 }
 
-int read_fields(char *data, char key_l[KEY_SIZE], int dsize, char *mac, char *hmac, char *err)
+int read_fields(char *data, char *key_l, int dsize, char *mac, char *hmac, char *err)
 {
 	struct item {
 		int len;
