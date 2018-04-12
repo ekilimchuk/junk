@@ -1,5 +1,6 @@
 Install:
-	$ sudo apt-gen update
+	$ git clone git@github.com:ekilimchuk/junk.git
+	$ sudo apt-get update
 	$ sudo apt-get install libtwofish-dev libssl-dev
 	$ make
 

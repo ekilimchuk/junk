@@ -27,6 +27,12 @@ struct Psafe3 {
 //	char hmac;
 };
 
+struct Psafe3_item {
+	int *len;
+	char *type;
+	char *data;
+};
+
 void print_hex_debug(char *p, int n)
 {
 	for (int i = 0; i < n; i++) {
@@ -151,26 +157,30 @@ void twofish_cbc(char *iv, char *key, char *b, int count, char *res)
 	}
 }
 
-int read_fields(char *data, char *key_l, int dsize, char *mac, char *hmac, char *err)
+int read_fields(char *data, char *key_l, int dsize, char *mac, char *hmac, struct Psafe3_item **item, int *items_count, char *err)
 {
-	struct item {
-		int len;
-		char type;
-		char data[];
-	};
 	unsigned int dlen;
 	HMAC_CTX ctx;
-	struct item *p;
+	struct Psafe3_item *items;
+	*item = (struct Psafe3_item*) malloc(sizeof(struct Psafe3_item));
+	items = *item;
 	HMAC_Init(&ctx, key_l, KEY_SIZE, EVP_sha256());
-	p = (void*) data;
-
-	while((void*)&p[0] < (void*)&data[0] + dsize) {
-		HMAC_Update(&ctx, p->data, p->len);
-		if ((5 + p->len) % TWOFISH_BLOCK_SIZE != 0) {
-			p = (void*)&p->data[p->len] + TWOFISH_BLOCK_SIZE - (5 + p->len) % TWOFISH_BLOCK_SIZE;
+	int i = 0;
+	items[i].len = (int*) data;
+	items[i].type = (char*) data + 4;
+	items[i].data = (char*) data + 4 + 1;
+	while((void*)items[i].data < (void*)&data[0] + dsize) {
+		HMAC_Update(&ctx, items[i].data, *items[i].len);
+		i++;
+		*item = realloc(*item, sizeof(struct Psafe3_item) * (i + 1));
+		items = *item;
+		if ((5 + *items[i-1].len) % TWOFISH_BLOCK_SIZE != 0) {
+			items[i].len = (void*)&items[i-1].data[*items[i-1].len] + TWOFISH_BLOCK_SIZE - (5 + *items[i-1].len) % TWOFISH_BLOCK_SIZE;
 		} else {
-			p = (void*)&p->data[p->len];
+			items[i].len = (void*)&items[i-1].data[*items[i-1].len];
 		}
+		items[i].type = (char*) items[i].len + 4;
+		items[i].data = (char*) items[i].len + 4 + 1;
 	}
 	HMAC_Final(&ctx, hmac, &dlen);
 	HMAC_cleanup(&ctx);
@@ -178,6 +188,7 @@ int read_fields(char *data, char *key_l, int dsize, char *mac, char *hmac, char 
 		strcpy(err, "invalid hmac");
 		return 1;
 	}
+	*items_count = i;
 	return 0;
 }
 
@@ -229,15 +240,16 @@ int main(int argc, char **argv)
 	twofish_ecb(key, psafe3_data->b34, 2, key_l);
 
 	res = malloc(dbsize);
-
 	twofish_cbc(psafe3_data->iv, key_k, psafe3_data->db, dbsize/TWOFISH_BLOCK_SIZE, res);
-	if (read_fields(res, key_l, dbsize, mac, hmac, err)) {
+	struct Psafe3_item *items = NULL;
+	int items_count;
+	if (read_fields(res, key_l, dbsize, mac, hmac, &items, &items_count, err)) {
 		print_error(err);
 		return 1;
 	}
 
 // debug
-/**/	printf("fsize:\n");
+/*	printf("fsize:\n");
 	printf("%i\n", fsize);
 	printf("\n");
 	printf("dbsize:\n");
@@ -261,8 +273,12 @@ int main(int argc, char **argv)
 	printf("hmac:\n");
 	print_hex_debug(hmac, KEY_SIZE);
 	printf("\n");/**/
-/*	for (int i=0; i<dbsize; i++)
-		printf("%c", res[i]);
-	printf("\n");/**/
+/**/	for (int j = 0; j<items_count; j++) {
+		printf("%i\n", *items[j].len);	
+		printf("%02x\n", *items[j].type);
+		for (int i = 0; i<*items[j].len; i++)
+			printf("%c", items[j].data[i]);
+		printf("\n");
+	}/**/
 	return 0;
 }
