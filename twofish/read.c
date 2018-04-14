@@ -222,14 +222,15 @@ void print_error(char *err)
 
 int main(int argc, char **argv)
 {
-	char *addr;
-	struct Psafe3 *psafe3_data;
+	char *addr = NULL;
+	struct Psafe3 *psafe3_data = NULL;
 	struct Psafe3_item *items = NULL;
+	char pkey[1024];
 	char err[100];
 	char key[KEY_SIZE];
 	char key_k[KEY_SIZE];
 	char key_l[KEY_SIZE];
-	char *res;
+	char *res = NULL;
 	int fsize = 0, dbsize = 0;
 	char mac[KEY_SIZE];
 	char hmac[KEY_SIZE];
@@ -250,7 +251,8 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	if (stretch_pswd("bogus12345", psafe3_data->salt, *((int *)psafe3_data->iter), key, err)) {
+	scanf("%s", &pkey);
+	if (stretch_pswd(pkey, psafe3_data->salt, *((int *)psafe3_data->iter), key, err)) {
 		print_error(err);
 		return 1;
 	}
