@@ -9,3 +9,6 @@ Run test:
 
 Uninstall:
 	$ make clean
+	
+File fomat:
+https://github.com/pwsafe/pwsafe/blob/master/docs/formatV3.txt
