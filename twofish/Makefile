@@ -12,7 +12,7 @@ test:
 	./main -d key1 > selftest_d.tmp < selftest_e.tmp
 	diff selftest_t.tmp selftest_d.tmp
 	md5sum selftest_t.tmp selftest_d.tmp
-	./read read.c | wc -l
+	./read simple.psafe3 | wc -l
 
 clean:
 	rm -f ./main selftest_[ted].tmp ./read

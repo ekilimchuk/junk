@@ -82,6 +82,7 @@ int get_psafe3_data(char **addr, struct Psafe3 **psafe3_data, int *fsize, int *d
 	*dbsize = *fsize - 16 - 32 - sizeof(**psafe3_data);
 	*psafe3_data = (void*) *addr;
 	memcpy(mac, *addr + *fsize - 32, 32);
+	strcpy(err, "");
 	return 0;
 }
 
@@ -106,6 +107,7 @@ int stretch_pswd(char *pswd, char *salt, int iter, char *obuf, char *err)
 		memcpy(tmpbuf, obuf, 32);
 		SHA256(tmpbuf, 32, obuf);
 	}
+	strcpy(err, "");
 	return 0;
 }
 
@@ -118,6 +120,7 @@ int check_key(char *key, char *p, char *err)
 		strcpy(err, "invalid password");
 		return 1;
 	}
+	strcpy(err, "");
 	return 0;
 }
 
@@ -189,7 +192,27 @@ int read_fields(char *data, char *key_l, int dsize, char *mac, char *hmac, struc
 		return 1;
 	}
 	*items_count = i;
+	strcpy(err, "");
 	return 0;
+}
+
+void print_items(struct Psafe3_item **items, int items_count)
+{
+	struct Psafe3_item *item = *items;
+	for (int j = 0; j < items_count; j++) {
+		if (*item[j].type == 0x02 ||
+			*item[j].type == 0x03 ||
+			*item[j].type == 0x05 ||
+			*item[j].type == 0x06 ||
+			*item[j].type == 0x11 ||
+			*item[j].type == 0x12) {
+			for (int i = 0; i < *item[j].len; i++)
+				printf("%c", item[j].data[i]);
+			printf("\n");
+		}
+		if (*item[j].type == 0xff)
+			printf("===\n");
+	}
 }
 
 void print_error(char *err)
@@ -201,6 +224,7 @@ int main(int argc, char **argv)
 {
 	char *addr;
 	struct Psafe3 *psafe3_data;
+	struct Psafe3_item *items = NULL;
 	char err[100];
 	char key[KEY_SIZE];
 	char key_k[KEY_SIZE];
@@ -209,6 +233,7 @@ int main(int argc, char **argv)
 	int fsize = 0, dbsize = 0;
 	char mac[KEY_SIZE];
 	char hmac[KEY_SIZE];
+	int items_count;
 
 	if (argc < 2) {
 		fprintf(stderr, "Run: %s <file.psafe3>\n", argv[0]);
@@ -241,12 +266,12 @@ int main(int argc, char **argv)
 
 	res = malloc(dbsize);
 	twofish_cbc(psafe3_data->iv, key_k, psafe3_data->db, dbsize/TWOFISH_BLOCK_SIZE, res);
-	struct Psafe3_item *items = NULL;
-	int items_count;
 	if (read_fields(res, key_l, dbsize, mac, hmac, &items, &items_count, err)) {
 		print_error(err);
 		return 1;
 	}
+	print_items(&items, items_count);
+
 
 // debug
 /*	printf("fsize:\n");
@@ -273,7 +298,8 @@ int main(int argc, char **argv)
 	printf("hmac:\n");
 	print_hex_debug(hmac, KEY_SIZE);
 	printf("\n");/**/
-/**/	for (int j = 0; j<items_count; j++) {
+	
+/*	for (int j = 0; j<items_count; j++) {
 		printf("%i\n", *items[j].len);	
 		printf("%02x\n", *items[j].type);
 		for (int i = 0; i<*items[j].len; i++)
