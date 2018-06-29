@@ -46,13 +46,10 @@ func (d Data) Fetch() error {
 }
 
 func main()  {
-  s1 := "native"
-  s3 := "ru"
-  s2 := "english"
 
   data := Data{
-    fmt.Sprintf("https://www.%s-%s.%s/grammar/irregular-verbs", s1, s2, s3),
-    "./data.txt",
+    "http://spacepilot.ru/irregular-verbs/verbs.xml",
+    "./verbs.xml",
   }
 
   if len(os.Args) < 2 {
