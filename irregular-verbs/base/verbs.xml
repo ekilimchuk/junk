@@ -1,0 +1,602 @@
+<verbs>
+	<verb>
+		<Infinitive>be</Infinitive>
+		<PastSimple>was, were</PastSimple>
+		<PastParticiple>been</PastParticiple>
+		<Translation>быть, являться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>beat</Infinitive>
+		<PastSimple>beat</PastSimple>
+		<PastParticiple>beaten</PastParticiple>
+		<Translation>бить, колотить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>become</Infinitive>
+		<PastSimple>became</PastSimple>
+		<PastParticiple>become</PastParticiple>
+		<Translation>становиться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>begin</Infinitive>
+		<PastSimple>began</PastSimple>
+		<PastParticiple>begun</PastParticiple>
+		<Translation>начинать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>bend</Infinitive>
+		<PastSimple>bent</PastSimple>
+		<PastParticiple>bent</PastParticiple>
+		<Translation>гнуть</Translation>
+	</verb>
+	<verb>
+		<Infinitive>bet</Infinitive>
+		<PastSimple>bet</PastSimple>
+		<PastParticiple>bet</PastParticiple>
+		<Translation>держать пари</Translation>
+	</verb>
+	<verb>
+		<Infinitive>bite</Infinitive>
+		<PastSimple>bit</PastSimple>
+		<PastParticiple>bitten</PastParticiple>
+		<Translation>кусать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>blow</Infinitive>
+		<PastSimple>blew</PastSimple>
+		<PastParticiple>blown</PastParticiple>
+		<Translation>дуть, выдыхать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>break</Infinitive>
+		<PastSimple>broke</PastSimple>
+		<PastParticiple>broken</PastParticiple>
+		<Translation>ломать, разбивать, разрушать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>bring</Infinitive>
+		<PastSimple>brought</PastSimple>
+		<PastParticiple>brought</PastParticiple>
+		<Translation>приносить, привозить, доставлять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>build</Infinitive>
+		<PastSimple>built</PastSimple>
+		<PastParticiple>built</PastParticiple>
+		<Translation>строить, сооружать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>buy</Infinitive>
+		<PastSimple>bought</PastSimple>
+		<PastParticiple>bought</PastParticiple>
+		<Translation>покупать, приобретать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>catch</Infinitive>
+		<PastSimple>caught</PastSimple>
+		<PastParticiple>caught</PastParticiple>
+		<Translation>ловить, поймать, схватить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>choose</Infinitive>
+		<PastSimple>chose</PastSimple>
+		<PastParticiple>chosen</PastParticiple>
+		<Translation>выбирать, избирать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>come</Infinitive>
+		<PastSimple>came</PastSimple>
+		<PastParticiple>come</PastParticiple>
+		<Translation>приходить, подходить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>cost</Infinitive>
+		<PastSimple>cost</PastSimple>
+		<PastParticiple>cost</PastParticiple>
+		<Translation>стоить, обходиться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>cut</Infinitive>
+		<PastSimple>cut</PastSimple>
+		<PastParticiple>cut</PastParticiple>
+		<Translation>резать, разрезать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>deal</Infinitive>
+		<PastSimple>dealt</PastSimple>
+		<PastParticiple>dealt</PastParticiple>
+		<Translation>иметь дело, распределять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>dig</Infinitive>
+		<PastSimple>dug</PastSimple>
+		<PastParticiple>dug</PastParticiple>
+		<Translation>копать, рыть</Translation>
+	</verb>
+	<verb>
+		<Infinitive>do</Infinitive>
+		<PastSimple>did</PastSimple>
+		<PastParticiple>done</PastParticiple>
+		<Translation>делать, выполнять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>draw</Infinitive>
+		<PastSimple>drew</PastSimple>
+		<PastParticiple>drawn</PastParticiple>
+		<Translation>рисовать, чертить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>drink</Infinitive>
+		<PastSimple>drank</PastSimple>
+		<PastParticiple>drunk</PastParticiple>
+		<Translation>пить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>drive</Infinitive>
+		<PastSimple>drove</PastSimple>
+		<PastParticiple>driven</PastParticiple>
+		<Translation>ездить, подвозить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>eat</Infinitive>
+		<PastSimple>ate</PastSimple>
+		<PastParticiple>eaten</PastParticiple>
+		<Translation>есть, поглощать, поедать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>fall</Infinitive>
+		<PastSimple>fell</PastSimple>
+		<PastParticiple>fallen</PastParticiple>
+		<Translation>падать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>feed</Infinitive>
+		<PastSimple>fed</PastSimple>
+		<PastParticiple>fed</PastParticiple>
+		<Translation>кормить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>feel</Infinitive>
+		<PastSimple>felt</PastSimple>
+		<PastParticiple>felt</PastParticiple>
+		<Translation>чувствовать, ощущать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>fight</Infinitive>
+		<PastSimple>fought</PastSimple>
+		<PastParticiple>fought</PastParticiple>
+		<Translation>драться, сражаться, воевать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>find</Infinitive>
+		<PastSimple>found</PastSimple>
+		<PastParticiple>found</PastParticiple>
+		<Translation>находить, обнаруживать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>fly</Infinitive>
+		<PastSimple>flew</PastSimple>
+		<PastParticiple>flown</PastParticiple>
+		<Translation>летать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>forget</Infinitive>
+		<PastSimple>forgot</PastSimple>
+		<PastParticiple>forgotten</PastParticiple>
+		<Translation>забывать о (чём-либо)</Translation>
+	</verb>
+	<verb>
+		<Infinitive>forgive</Infinitive>
+		<PastSimple>forgave</PastSimple>
+		<PastParticiple>forgiven</PastParticiple>
+		<Translation>прощать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>freeze</Infinitive>
+		<PastSimple>froze</PastSimple>
+		<PastParticiple>frozen</PastParticiple>
+		<Translation>замерзать, замирать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>get</Infinitive>
+		<PastSimple>got</PastSimple>
+		<PastParticiple>got</PastParticiple>
+		<Translation>получать, добираться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>give</Infinitive>
+		<PastSimple>gave</PastSimple>
+		<PastParticiple>given</PastParticiple>
+		<Translation>дать, подать, дарить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>go</Infinitive>
+		<PastSimple>went</PastSimple>
+		<PastParticiple>gone</PastParticiple>
+		<Translation>идти, двигаться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>grow</Infinitive>
+		<PastSimple>grew</PastSimple>
+		<PastParticiple>grown</PastParticiple>
+		<Translation>расти, вырастать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>hang</Infinitive>
+		<PastSimple>hung</PastSimple>
+		<PastParticiple>hung</PastParticiple>
+		<Translation>вешать, развешивать, висеть</Translation>
+	</verb>
+	<verb>
+		<Infinitive>have</Infinitive>
+		<PastSimple>had</PastSimple>
+		<PastParticiple>had</PastParticiple>
+		<Translation>иметь, обладать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>hear</Infinitive>
+		<PastSimple>heard</PastSimple>
+		<PastParticiple>heard</PastParticiple>
+		<Translation>слышать, услышать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>hide</Infinitive>
+		<PastSimple>hid</PastSimple>
+		<PastParticiple>hidden</PastParticiple>
+		<Translation>прятать, скрывать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>hit</Infinitive>
+		<PastSimple>hit</PastSimple>
+		<PastParticiple>hit</PastParticiple>
+		<Translation>ударять, поражать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>hold</Infinitive>
+		<PastSimple>held</PastSimple>
+		<PastParticiple>held</PastParticiple>
+		<Translation>держать, удерживать, задерживать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>hurt</Infinitive>
+		<PastSimple>hurt</PastSimple>
+		<PastParticiple>hurt</PastParticiple>
+		<Translation>ранить, причинять боль, ушибить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>keep</Infinitive>
+		<PastSimple>kept</PastSimple>
+		<PastParticiple>kept</PastParticiple>
+		<Translation>хранить, сохранять, поддерживать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>know</Infinitive>
+		<PastSimple>knew</PastSimple>
+		<PastParticiple>known</PastParticiple>
+		<Translation>знать, иметь представление</Translation>
+	</verb>
+	<verb>
+		<Infinitive>lay</Infinitive>
+		<PastSimple>laid</PastSimple>
+		<PastParticiple>laid</PastParticiple>
+		<Translation>класть, положить, покрывать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>lead</Infinitive>
+		<PastSimple>led</PastSimple>
+		<PastParticiple>led</PastParticiple>
+		<Translation>вести за собой, сопровождать, руководить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>leave</Infinitive>
+		<PastSimple>left</PastSimple>
+		<PastParticiple>left</PastParticiple>
+		<Translation>покидать, уходить, уезжать, оставлять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>lend</Infinitive>
+		<PastSimple>lent</PastSimple>
+		<PastParticiple>lent</PastParticiple>
+		<Translation>одалживать, давать взаймы (в долг)</Translation>
+	</verb>
+	<verb>
+		<Infinitive>let</Infinitive>
+		<PastSimple>let</PastSimple>
+		<PastParticiple>let</PastParticiple>
+		<Translation>позволять, разрешать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>lie</Infinitive>
+		<PastSimple>lay</PastSimple>
+		<PastParticiple>lain</PastParticiple>
+		<Translation>лежать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>light</Infinitive>
+		<PastSimple>lit</PastSimple>
+		<PastParticiple>lit</PastParticiple>
+		<Translation>зажигать, светиться, освещать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>lose</Infinitive>
+		<PastSimple>lost</PastSimple>
+		<PastParticiple>lost</PastParticiple>
+		<Translation>терять, лишаться, утрачивать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>make</Infinitive>
+		<PastSimple>made</PastSimple>
+		<PastParticiple>made</PastParticiple>
+		<Translation>делать, создавать, изготавливать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>mean</Infinitive>
+		<PastSimple>meant</PastSimple>
+		<PastParticiple>meant</PastParticiple>
+		<Translation>значить, иметь в виду, подразумевать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>meet</Infinitive>
+		<PastSimple>met</PastSimple>
+		<PastParticiple>met</PastParticiple>
+		<Translation>встречать, знакомиться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>pay</Infinitive>
+		<PastSimple>paid</PastSimple>
+		<PastParticiple>paid</PastParticiple>
+		<Translation>платить, оплачивать, рассчитываться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>put</Infinitive>
+		<PastSimple>put</PastSimple>
+		<PastParticiple>put</PastParticiple>
+		<Translation>ставить, помещать, класть</Translation>
+	</verb>
+	<verb>
+		<Infinitive>read</Infinitive>
+		<PastSimple>read</PastSimple>
+		<PastParticiple>read</PastParticiple>
+		<Translation>читать, прочитать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>ride</Infinitive>
+		<PastSimple>rode</PastSimple>
+		<PastParticiple>ridden</PastParticiple>
+		<Translation>ехать верхом, кататься</Translation>
+	</verb>
+	<verb>
+		<Infinitive>ring</Infinitive>
+		<PastSimple>rang</PastSimple>
+		<PastParticiple>rung</PastParticiple>
+		<Translation>звенеть, звонить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>rise</Infinitive>
+		<PastSimple>rose</PastSimple>
+		<PastParticiple>risen</PastParticiple>
+		<Translation>восходить, вставать, подниматься</Translation>
+	</verb>
+	<verb>
+		<Infinitive>run</Infinitive>
+		<PastSimple>ran</PastSimple>
+		<PastParticiple>run</PastParticiple>
+		<Translation>бежать, бегать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>say</Infinitive>
+		<PastSimple>said</PastSimple>
+		<PastParticiple>said</PastParticiple>
+		<Translation>говорить, сказать, произносить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>see</Infinitive>
+		<PastSimple>saw</PastSimple>
+		<PastParticiple>seen</PastParticiple>
+		<Translation>видеть</Translation>
+	</verb>
+	<verb>
+		<Infinitive>seek</Infinitive>
+		<PastSimple>sought</PastSimple>
+		<PastParticiple>sought</PastParticiple>
+		<Translation>искать, разыскивать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>sell</Infinitive>
+		<PastSimple>sold</PastSimple>
+		<PastParticiple>sold</PastParticiple>
+		<Translation>продавать, торговать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>send</Infinitive>
+		<PastSimple>sent</PastSimple>
+		<PastParticiple>sent</PastParticiple>
+		<Translation>посылать, отправлять, отсылать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>set</Infinitive>
+		<PastSimple>set</PastSimple>
+		<PastParticiple>set</PastParticiple>
+		<Translation>устанавливать, задавать, назначать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>shake</Infinitive>
+		<PastSimple>shook</PastSimple>
+		<PastParticiple>shaken</PastParticiple>
+		<Translation>трясти, встряхивать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>shine</Infinitive>
+		<PastSimple>shone</PastSimple>
+		<PastParticiple>shone</PastParticiple>
+		<Translation>светить, сиять, озарять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>shoot</Infinitive>
+		<PastSimple>shot</PastSimple>
+		<PastParticiple>shot</PastParticiple>
+		<Translation>стрелять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>show</Infinitive>
+		<PastSimple>showed</PastSimple>
+		<PastParticiple>shown, showed</PastParticiple>
+		<Translation>показывать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>shut</Infinitive>
+		<PastSimple>shut</PastSimple>
+		<PastParticiple>shut</PastParticiple>
+		<Translation>закрывать, запирать, затворять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>sing</Infinitive>
+		<PastSimple>sang</PastSimple>
+		<PastParticiple>sung</PastParticiple>
+		<Translation>петь, напевать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>sink</Infinitive>
+		<PastSimple>sank</PastSimple>
+		<PastParticiple>sunk</PastParticiple>
+		<Translation>тонуть, погружаться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>sit</Infinitive>
+		<PastSimple>sat</PastSimple>
+		<PastParticiple>sat</PastParticiple>
+		<Translation>сидеть, садиться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>sleep</Infinitive>
+		<PastSimple>slept</PastSimple>
+		<PastParticiple>slept</PastParticiple>
+		<Translation>спать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>speak</Infinitive>
+		<PastSimple>spoke</PastSimple>
+		<PastParticiple>spoken</PastParticiple>
+		<Translation>говорить, разговаривать, высказываться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>spend</Infinitive>
+		<PastSimple>spent</PastSimple>
+		<PastParticiple>spent</PastParticiple>
+		<Translation>тратить, расходовать, проводить (время)</Translation>
+	</verb>
+	<verb>
+		<Infinitive>stand</Infinitive>
+		<PastSimple>stood</PastSimple>
+		<PastParticiple>stood</PastParticiple>
+		<Translation>стоять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>steal</Infinitive>
+		<PastSimple>stole</PastSimple>
+		<PastParticiple>stolen</PastParticiple>
+		<Translation>воровать, красть</Translation>
+	</verb>
+	<verb>
+		<Infinitive>stick</Infinitive>
+		<PastSimple>stuck</PastSimple>
+		<PastParticiple>stuck</PastParticiple>
+		<Translation>втыкать, приклеивать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>strike</Infinitive>
+		<PastSimple>struck</PastSimple>
+		<PastParticiple>struck, stricken</PastParticiple>
+		<Translation>ударять, бить, поражать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>swear</Infinitive>
+		<PastSimple>swore</PastSimple>
+		<PastParticiple>sworn</PastParticiple>
+		<Translation>клясться, присягать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>sweep</Infinitive>
+		<PastSimple>swept</PastSimple>
+		<PastParticiple>swept</PastParticiple>
+		<Translation>мести, подметать, смахивать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>swim</Infinitive>
+		<PastSimple>swam</PastSimple>
+		<PastParticiple>swum</PastParticiple>
+		<Translation>плавать, плыть</Translation>
+	</verb>
+	<verb>
+		<Infinitive>swing</Infinitive>
+		<PastSimple>swung</PastSimple>
+		<PastParticiple>swung</PastParticiple>
+		<Translation>качаться, вертеться</Translation>
+	</verb>
+	<verb>
+		<Infinitive>take</Infinitive>
+		<PastSimple>took</PastSimple>
+		<PastParticiple>taken</PastParticiple>
+		<Translation>брать, хватать, взять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>teach</Infinitive>
+		<PastSimple>taught</PastSimple>
+		<PastParticiple>taught</PastParticiple>
+		<Translation>учить, обучать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>tear</Infinitive>
+		<PastSimple>tore</PastSimple>
+		<PastParticiple>torn</PastParticiple>
+		<Translation>рвать, отрывать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>tell</Infinitive>
+		<PastSimple>told</PastSimple>
+		<PastParticiple>told</PastParticiple>
+		<Translation>рассказывать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>think</Infinitive>
+		<PastSimple>thought</PastSimple>
+		<PastParticiple>thought</PastParticiple>
+		<Translation>думать, мыслить, размышлять</Translation>
+	</verb>
+	<verb>
+		<Infinitive>throw</Infinitive>
+		<PastSimple>threw</PastSimple>
+		<PastParticiple>thrown</PastParticiple>
+		<Translation>бросать, кидать, метать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>understand</Infinitive>
+		<PastSimple>understood</PastSimple>
+		<PastParticiple>understood</PastParticiple>
+		<Translation>понимать, постигать</Translation>
+	</verb>
+	<verb>
+		<Infinitive>wake</Infinitive>
+		<PastSimple>woke</PastSimple>
+		<PastParticiple>woken</PastParticiple>
+		<Translation>просыпаться, будить</Translation>
+	</verb>
+	<verb>
+		<Infinitive>wear</Infinitive>
+		<PastSimple>wore</PastSimple>
+		<PastParticiple>worn</PastParticiple>
+		<Translation>носить (одежду)</Translation>
+	</verb>
+	<verb>
+		<Infinitive>win</Infinitive>
+		<PastSimple>won</PastSimple>
+		<PastParticiple>won</PastParticiple>
+		<Translation>победить, выиграть</Translation>
+	</verb>
+	<verb>
+		<Infinitive>write</Infinitive>
+		<PastSimple>wrote</PastSimple>
+		<PastParticiple>written</PastParticiple>
+		<Translation>писать, записывать</Translation>
+	</verb>
+</verbs>
