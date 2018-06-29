@@ -35,12 +35,10 @@ func printHelp() {
 
 func runAppFetch(d Data) error {
   fmt.Printf("Fetch XML from %s\n", d.URL)
-  err := d.FetchHTTP()
-  if err != nil {
+  if err := d.FetchHTTP(); err != nil {
     return err
   }
-  err = d.SaveBase()
-  if err != nil {
+  if err := d.SaveBase(); err != nil {
     return err
   }
   fmt.Println("Fetch XML and save - done!")
@@ -49,13 +47,11 @@ func runAppFetch(d Data) error {
 
 func runApp(d Data) error {
   if b := d.ExistFile(); b == false {
-    err := runAppFetch(d)
-    if err != nil {
+    if err := runAppFetch(d); err != nil {
       return err
     }
   }
-  err := d.FetchFile()
-  if err != nil {
+  if err := d.FetchFile(); err != nil {
     fmt.Printf("Fetch %v\n", err)
     return err
   }
@@ -93,11 +89,7 @@ func (d *Data) FetchFile() error {
 }
 
 func (d *Data) fetch() error {
-  err := xml.Unmarshal(d.XML, &d.Verbs)
-  if err != nil {
-    return err
-  }
-  return nil
+  return xml.Unmarshal(d.XML, &d.Verbs)
 }
 
 func (d *Data) SaveBase() error {
@@ -105,34 +97,34 @@ func (d *Data) SaveBase() error {
   if err != nil {
     return err
   }
-  err = ioutil.WriteFile(d.FileName, saveXML, 0644)
-  if err != nil {
+  if err = ioutil.WriteFile(d.FileName, saveXML, 0644); err != nil {
     return err
   }
   return nil
 }
 
 func main() {
-  if len(os.Args) < 2 {
-    printHelp()
-    os.Exit(1)
-  }
+
   data := Data{
     "http://spacepilot.ru/irregular-verbs/verbs.xml",
     "./verbs.xml",
     nil,
     Verbs{},
   }
+
+  if len(os.Args) < 2 {
+    printHelp()
+    os.Exit(1)
+  }
+
   switch os.Args[1] {
   case "run":
-    err := runApp(data)
-    if err != nil {
+    if err := runApp(data); err != nil {
       fmt.Printf("Error: %s\n", err)
       os.Exit(1)
     }
   case "fetch":
-    err := runAppFetch(data)
-    if err != nil {
+    if err := runAppFetch(data); err != nil {
       fmt.Printf("Error: %s\n", err)
       os.Exit(1)
     }
