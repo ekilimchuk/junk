@@ -7,6 +7,7 @@ import (
   "path/filepath"
   "io/ioutil"
   "encoding/xml"
+  "strings"
 )
 
 type Data struct {
@@ -30,7 +31,7 @@ type Verbs struct {
 }
 
 func printHelp() {
-  fmt.Printf("Use: ./%s <run|fetch>\n", filepath.Base(os.Args[0]))
+  fmt.Printf("Use: ./%s <run|fetch|list>\n", filepath.Base(os.Args[0]))
 }
 
 func runAppFetch(d Data) error {
@@ -55,7 +56,58 @@ func runApp(d Data) error {
     fmt.Printf("Fetch %v\n", err)
     return err
   }
-  fmt.Printf("%s\n", d.Verbs)
+  for {
+    for i := 0; i < len(d.Verbs.Verbs); i++ {
+      fmt.Printf("Translation: %s\n", d.Verbs.Verbs[i].Translation)
+      checkVerbs("Infinitive: ", d.Verbs.Verbs[i].Infinitive)
+      checkVerbs("Past Simple: ", d.Verbs.Verbs[i].PastSimple)
+      checkVerbs("Past Participle: ", d.Verbs.Verbs[i].PastParticiple)
+    }
+  }
+  return nil
+}
+
+func compareStrings(s1 string, s2 string) bool {
+  for _, e := range strings.Split(s2, ",") {
+    if strings.TrimSpace(e) == s1 {
+      return true
+    }
+  }
+  return false
+}
+
+func checkVerbs(s string, verb string) {
+  resp := ""
+  fmt.Printf("%s", s)
+  fmt.Scanf("%s", &resp)
+  if compareStrings(resp, verb) {
+    fmt.Printf("\033[32mCorrect:\033[0m %s\n", verb)
+  } else {
+    fmt.Printf("\033[31mWRONG!\033[0m Use '%s'.\n", verb)
+  }
+}
+
+func runAppList(d Data) error {
+  if b := d.ExistFile(); b == false {
+    if err := runAppFetch(d); err != nil {
+      return err
+    }
+  }
+  if err := d.FetchFile(); err != nil {
+    fmt.Printf("Fetch %v\n", err)
+    return err
+  }
+
+  fmt.Println("Infinitive\tPast Simple\tPast Participle\tTranslation")
+  for i := 0; i < len(d.Verbs.Verbs); i++ {
+    fmt.Printf(
+      "%s\t%s\t%s\t%s\n",
+      d.Verbs.Verbs[i].Infinitive,
+      d.Verbs.Verbs[i].PastSimple,
+      d.Verbs.Verbs[i].PastParticiple,
+      d.Verbs.Verbs[i].Translation,
+    )
+  }
   return nil
 }
 
@@ -125,6 +177,11 @@ func main() {
     }
   case "fetch":
     if err := runAppFetch(data); err != nil {
+      fmt.Printf("Error: %s\n", err)
+      os.Exit(1)
+    }
+  case "list":
+    if err := runAppList(data); err != nil {
       fmt.Printf("Error: %s\n", err)
       os.Exit(1)
     }
