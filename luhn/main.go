@@ -33,7 +33,7 @@ func CheckLuhn(s string) bool {
 
 func main() {
 	s := "4539 1488 0343 6467"
-	fmt.Printf("%s - %v\n", s, Luhn(s))
+	fmt.Printf("%s - %v\n", s, CheckLuhn(s))
 	s = "8273 1232 7352 0569"
-	fmt.Printf("%s - %v\n", s, Luhn(s))
+	fmt.Printf("%s - %v\n", s, CheckLuhn(s))
 }
