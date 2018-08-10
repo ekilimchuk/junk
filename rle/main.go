@@ -64,6 +64,8 @@ func main() {
 	fmt.Printf("%s =  %s\n", s, Encode(s))
 	s = ""
 	fmt.Printf("%s =  %s\n", s, Encode(s))
+	s = "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWBWWWWWWWWWWWWWW"
+	fmt.Printf("%s =  %s\n", s, Encode(s))
 	// Encode
 	s = "2ac2bm3v"
 	fmt.Printf("%s =  %s\n", s, Decode(s))
@@ -72,6 +74,8 @@ func main() {
 	s = "a"
 	fmt.Printf("%s =  %s\n", s, Decode(s))
 	s = ""
+	fmt.Printf("%s =  %s\n", s, Decode(s))
+	s = "127A127A2A"
 	fmt.Printf("%s =  %s\n", s, Decode(s))
 
 }
