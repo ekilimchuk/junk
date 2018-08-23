@@ -1,14 +1,14 @@
 #define MIN 1
 #define MAX 64
-unsigned long square(const int n) {
+unsigned long long square(const unsigned int n) {
 	if ( n < MIN || n > MAX) {
-		return 0ul;
+		return 0ull;
 	}
-	return 1ul << (n - 1);
+	return 1ull << (n - 1);
 }
 
-unsigned long total() {
-	unsigned long sum = 0ul;
+unsigned long long total() {
+	unsigned long long sum = 0ull;
 	for (int i = MIN; i <= MAX; i++) {
 		sum += square(i);
 	}

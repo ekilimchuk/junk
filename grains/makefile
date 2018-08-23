@@ -4,6 +4,7 @@ CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -pedantic
 CFLAGS += -Werror
+CFLAGS += -DUNITY_SUPPORT_64
 
 VFLAGS  = --quiet
 VFLAGS += --tool=memcheck
