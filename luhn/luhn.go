@@ -22,7 +22,7 @@ func getValidCode(s string) ([]int, error) {
 	}
 	// Invalid size.
 	if len(numbers) < 2 {
-		return numbers, errors.New("Single digit string in not valid.")
+		return numbers, errors.New("Single digit string in not valid")
 	}
 	return numbers, nil
 }
