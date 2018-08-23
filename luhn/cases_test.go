@@ -1,8 +1,8 @@
 package luhn
 
 // Source: exercism/problem-specifications
-// Commit: c826372 luhn: Make canonical-data.json compliant
-// Problem Specifications Version: 1.0.0
+// Commit: 3930b0a luhn: add a test case of strings with non-digits (#1246)
+// Problem Specifications Version: 1.2.0
 
 var testCases = []struct {
 	description string
@@ -15,7 +15,7 @@ var testCases = []struct {
 		false,
 	},
 	{
-		"A single zero is invalid",
+		"a single zero is invalid",
 		"0",
 		false,
 	},
@@ -27,7 +27,7 @@ var testCases = []struct {
 	{
 		"a simple valid SIN that becomes invalid if reversed",
 		"59",
-		true,
+		false,
 	},
 	{
 		"a valid Canadian SIN",
@@ -73,5 +73,10 @@ var testCases = []struct {
 		"input digit 9 is correctly converted to output digit 9",
 		"091",
 		true,
+	},
+	{
+		"strings with non-digits is invalid",
+		":9",
+		false,
 	},
 }
