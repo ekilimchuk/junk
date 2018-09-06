@@ -29,19 +29,19 @@ func Build(records []Record) (*Node, error) {
 
 	nodes := make([]*Node, len(records))
 
-	for r, rec := range records {
-		nodes[r] = &Node{ID: rec.ID}
+	for i, r := range records {
+		nodes[i] = &Node{ID: r.ID}
 		switch {
-		case r == 0 && (rec.ID != 0 || rec.Parent != 0):
+		case i == 0 && (r.ID != 0 || r.Parent != 0):
 			return nil, errors.New("Invalid root record")
-		case r == 0:
+		case i == 0:
 			continue
-		case r != rec.ID || rec.ID <= rec.Parent:
+		case i != r.ID || r.ID <= r.Parent:
 			return nil, errors.New("Invalid record")
 		}
 
-		if parent := nodes[rec.Parent]; parent != nil {
-			parent.Children = append(parent.Children, nodes[r])
+		if parent := nodes[r.Parent]; parent != nil {
+			parent.Children = append(parent.Children, nodes[i])
 		}
 	}
 	return nodes[0], nil
