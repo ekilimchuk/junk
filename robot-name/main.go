@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"sync"
+	"strconv"
 )
 
 type Data struct {
@@ -15,7 +16,6 @@ type Data struct {
 }
 
 func (m *Data) saveMap() {
-	m.l.Lock()
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 	if err := enc.Encode(m.m); err != nil {
@@ -25,11 +25,9 @@ func (m *Data) saveMap() {
 	if err := ioutil.WriteFile("./data", data, 0777); err != nil {
 		panic(err)
 	}
-	m.l.Unlock()
 }
 
 func (m *Data) loadMap() {
-	m.l.Lock()
 	dat, err := ioutil.ReadFile("./data")
 	if err != nil {
 		panic(err)
@@ -38,41 +36,45 @@ func (m *Data) loadMap() {
 	if err := dec.Decode(&m.m); err != nil {
 		panic(err)
 	}
-	m.l.Unlock()
 }
 
 func NewData() *Data {
 	m := &Data{}
+	m.l.Lock()
 	if _, err := os.Stat("./data"); os.IsNotExist(err) {
 		fmt.Printf("New\n")
 		m.saveMap()
+		m.l.Unlock()
 		return m
 	}
 	fmt.Printf("Load\n")
 	m.loadMap()
+	m.l.Unlock()
 	return m
 }
 
-func (m *Data) AddKey(s string) {
+func (m *Data) key(s string, b bool) {
 	m.l.Lock()
-	m.m[s] = true
+	m.loadMap()
+	m.m[s] = b
+	m.saveMap()
 	m.l.Unlock()
 }
 
+func (m *Data) AddKey(s string) {
+	m.key(s, true)
+}
+
 func (m *Data) DelKey(s string) {
-	m.l.Lock()
-	m.m[s] = false
-	m.l.Unlock()
+	m.key(s, true)
 }
 
 func main() {
 	m := NewData()
-	m.loadMap()
-	fmt.Printf("File contents: %s\n", m.m)
-	m.AddKey("test")
-	m.DelKey("test")
-	m.AddKey("test2")
-	m.saveMap()
-	m.loadMap()
-	fmt.Printf("File contents: %s\n", m.m)
+	for i := 0; i < 10000; i++ {
+		m.AddKey(strconv.Itoa(i))
+		//fmt.Printf("File contents: %s\n", m.m)
+		m.DelKey(strconv.Itoa(i))
+		//fmt.Printf("File contents: %s\n", m.m)
+	}
 }
