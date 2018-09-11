@@ -53,11 +53,25 @@ func NewData() *Data {
 	return m
 }
 
+func (m *Data) AddKey(s string) {
+	m.l.Lock()
+	m.m[s] = true
+	m.l.Unlock()
+}
+
+func (m *Data) DelKey(s string) {
+	m.l.Lock()
+	m.m[s] = false
+	m.l.Unlock()
+}
+
 func main() {
 	m := NewData()
 	m.loadMap()
 	fmt.Printf("File contents: %s\n", m.m)
-	m.m = map[string]bool{"qwerty": true, "qwerty24": false}
+	m.AddKey("test")
+	m.DelKey("test")
+	m.AddKey("test2")
 	m.saveMap()
 	m.loadMap()
 	fmt.Printf("File contents: %s\n", m.m)
