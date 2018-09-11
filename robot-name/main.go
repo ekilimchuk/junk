@@ -10,7 +10,7 @@ import (
 )
 
 type Data struct {
-	l sync.RWMutex
+	l sync.Mutex
 	m map[string]bool
 }
 
@@ -29,7 +29,7 @@ func (m *Data) saveMap() {
 }
 
 func (m *Data) loadMap() {
-	m.l.RLock()
+	m.l.Lock()
 	dat, err := ioutil.ReadFile("./data")
 	if err != nil {
 		panic(err)
@@ -38,7 +38,7 @@ func (m *Data) loadMap() {
 	if err := dec.Decode(&m.m); err != nil {
 		panic(err)
 	}
-	m.l.RUnlock()
+	m.l.Unlock()
 }
 
 func NewData() *Data {
