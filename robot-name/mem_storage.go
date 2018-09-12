@@ -4,37 +4,37 @@ import (
 	"sync"
 )
 
-type Data struct {
+type data struct {
 	l sync.Mutex
 	m map[string]bool
 }
 
-var D Data
+var gd data
 
-func NewData() *Data {
-	D.l.Lock()
-	if D.m == nil {
-		D.m = map[string]bool{}
+func shareData() *data {
+	gd.l.Lock()
+	defer gd.l.Unlock()
+	if gd.m == nil {
+		gd.m = map[string]bool{}
 	}
-	D.l.Unlock()
-	return &D
+	return &gd
 }
 
-func (d *Data) key(s string, b bool) {
+func (d *data) key(s string, b bool) {
 	d.l.Lock()
+	defer d.l.Unlock()
 	d.m[s] = b
-	d.l.Unlock()
 }
 
-func (d *Data) AddKey(s string) {
+func (d *data) addKey(s string) {
 	d.key(s, true)
 }
 
-func (d *Data) DelKey(s string) {
+func (d *data) delKey(s string) {
 	d.key(s, false)
 }
 
-func (d *Data) ExistKey(s string) bool {
+func (d *data) existKey(s string) bool {
 	d.l.Lock()
 	defer d.l.Unlock()
 	if _, ok := d.m[s]; !ok {
