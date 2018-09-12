@@ -46,6 +46,9 @@ func TestResetName(t *testing.T) {
 func BenchmarkName(b *testing.B) {
 	// Benchmark combined time to create robot and name.
 	for i := 0; i < b.N; i++ {
-		New().Name()
+		n := New()
+		n.Name()
+		// Use Reset() for escape IDs overflow.
+		n.Reset()
 	}
 }
