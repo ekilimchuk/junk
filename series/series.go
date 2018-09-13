@@ -1,7 +1,6 @@
 package series
 
-func All(n int, s string) []string {
-	var ret []string
+func All(n int, s string) (ret []string) {
 	for i, _ := range s[:len(s)+1-n] {
 		ret = append(ret, s[i:i+n])
 	}
