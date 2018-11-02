@@ -5,25 +5,29 @@ import (
 	"io"
 )
 
+// Board is a struct with results of teams.
 type Board struct {
 	Teams      map[string]*TeamStats
 	OrderTeams []string
 }
 
+// TeamStats is a struct with stats of a team.
 type TeamStats struct {
-	MP int
-	W  int
-	D  int
-	L  int
-	P  int
+	MP int // Matches Played
+	W  int // Matches Won
+	D  int // Matches Drawn (Tied)
+	L  int // Matches Lost
+	P  int // Points
 }
 
+// Game is a struct with a competition information.
 type Game struct {
 	Team1  string
 	Team2  string
 	Result string
 }
 
+// Tally counts points and writes a result board.
 func Tally(reader io.Reader, buffer io.Writer) error {
 	var board *Board
 	board = board.New()
@@ -38,7 +42,6 @@ func Tally(reader io.Reader, buffer io.Writer) error {
 		}
 		board.AddResult(t)
 	}
-	board.Sort()
 	board.WriteBoard(buffer)
 	return nil
 }

@@ -23,6 +23,7 @@ func isValidStat(s []string) (bool, error) {
 	return true, nil
 }
 
+// GameParcer parses games and return a struct.
 func GameParcer(stat string) (Game, bool, error) {
 	s := strings.Split(stat, ";")
 	ok, err := isValidStat(s)
