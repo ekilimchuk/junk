@@ -3,6 +3,7 @@ package tournament
 import (
 	"fmt"
 	"io"
+	"sort"
 	"text/tabwriter"
 )
 
@@ -73,28 +74,28 @@ func (b *Board) WriteBoard(buffer io.Writer) {
 	w.Flush()
 }
 
-func (b *Board) sort() {
-	for i := 0; i < len(b.OrderTeams)-1; i++ {
-		for j := 0; j < len(b.OrderTeams)-1; j++ {
-			p1 := b.Teams[b.OrderTeams[j]]
-			p2 := b.Teams[b.OrderTeams[j+1]]
-			fiches1 := []int{p1.MP, p1.W, p1.D, p1.L, p1.P}
-			fiches2 := []int{p2.MP, p2.W, p2.D, p2.L, p2.P}
-			k := 0
-			for k = len(fiches1) - 1; k > 0; k-- {
-				if fiches1[k] < fiches2[k] {
-					b.OrderTeams[j], b.OrderTeams[j+1] = b.OrderTeams[j+1], b.OrderTeams[j]
-					continue
-				}
-				if fiches1[k] != fiches2[k] {
-					break
-				}
-			}
-			if k == 0 {
-				if b.OrderTeams[j] > b.OrderTeams[j+1] {
-					b.OrderTeams[j], b.OrderTeams[j+1] = b.OrderTeams[j+1], b.OrderTeams[j]
-				}
+func (b *Board) compare(i, j int) bool {
+	p1 := b.Teams[b.OrderTeams[i]]
+	p2 := b.Teams[b.OrderTeams[j]]
+	fiches1 := []int{p1.MP, p1.W, p1.D, p1.L, p1.P}
+	fiches2 := []int{p2.MP, p2.W, p2.D, p2.L, p2.P}
+	k := 0
+	for k = len(fiches1) - 1; k >= 0; k-- {
+		if fiches1[k] > fiches2[k] {
+			return true
+		}
+		if fiches1[k] != fiches2[k] {
+			break
+		}
+		if k == 0 {
+			if b.OrderTeams[i] < b.OrderTeams[j] {
+				return true
 			}
 		}
 	}
+	return false
+}
+
+func (b *Board) sort() {
+	sort.Slice(b.OrderTeams, func(i, j int) bool { return b.compare(i, j) })
 }
