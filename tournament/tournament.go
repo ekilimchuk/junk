@@ -29,8 +29,7 @@ type Game struct {
 
 // Tally counts points and writes a result board.
 func Tally(reader io.Reader, buffer io.Writer) error {
-	var board *Board
-	board = board.New()
+	board := NewBoard()
 	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
 		t, ok, err := GameParcer(scanner.Text())

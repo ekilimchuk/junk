@@ -8,7 +8,7 @@ import (
 )
 
 // New creates a new struct for results of teams.
-func (b *Board) New() *Board {
+func NewBoard() *Board {
 	m := make(map[string]*TeamStats)
 	a := make([]string, 0)
 	return &Board{m, a}
