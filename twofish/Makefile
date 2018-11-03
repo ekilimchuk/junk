@@ -1,18 +1,12 @@
-all: main read
+.PHONY: all build_main build_read
 
-main: main.c
-	gcc main.c -std=c99 -ltwofish -o main
+all: build_main build_read
 
-read: read.c
-	gcc read.c -std=c99 -lcrypto -ltwofish -o read
+build_main: main.c
+	@gcc main.c -std=c99 -ltwofish -o main
 
-test:
-	openssl rand -base64 500 > selftest_t.tmp
-	./main -e key1 > selftest_e.tmp < selftest_t.tmp
-	./main -d key1 > selftest_d.tmp < selftest_e.tmp
-	diff selftest_t.tmp selftest_d.tmp
-	md5sum selftest_t.tmp selftest_d.tmp
-	echo -n "bogus12345" | ./read simple.psafe3 | wc -l
+build_read: read.c
+	@gcc read.c -std=c99 -lcrypto -ltwofish -o read
 
 clean:
-	rm -f ./main selftest_[ted].tmp ./read
+	@rm -f ./main selftest_[ted].tmp ./read
