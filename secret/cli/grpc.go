@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"../api"
+	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -20,28 +20,28 @@ func NewClient(addrs string, port string) (*ClientConn, error) {
 }
 
 func (s *ClientConn) List(path string) (*api.ListResult, error) {
-    c := api.NewSecretClient(s.ClientConn)
-    return c.List(context.Background(), &api.ListMessage{Path: path})
+	c := api.NewSecretClient(s.ClientConn)
+	return c.List(context.Background(), &api.ListMessage{Path: path})
 }
 
 func (s *ClientConn) Add(path string) (*api.AddMessage, error) {
-    c := api.NewSecretClient(s.ClientConn)
-    return c.Add(context.Background(), &api.AddMessage{Aeskey: path})
+	c := api.NewSecretClient(s.ClientConn)
+	return c.Add(context.Background(), &api.AddMessage{Aeskey: path})
 }
 
 func (s *ClientConn) Remove(path string) (*api.RemoveMessage, error) {
-    c := api.NewSecretClient(s.ClientConn)
-    return c.Remove(context.Background(), &api.RemoveMessage{Path: path})
+	c := api.NewSecretClient(s.ClientConn)
+	return c.Remove(context.Background(), &api.RemoveMessage{Path: path})
 }
 
 func (s *ClientConn) Status(path string) (*api.StatusMessage, error) {
-    c := api.NewSecretClient(s.ClientConn)
-    return c.Status(context.Background(), &api.StatusMessage{Path: path})
+	c := api.NewSecretClient(s.ClientConn)
+	return c.Status(context.Background(), &api.StatusMessage{Path: path})
 }
 
 func (s *ClientConn) Fingers(path string) (*api.FingersResult, error) {
-    c := api.NewSecretClient(s.ClientConn)
-    return c.Fingers(context.Background(), &api.FingersMessage{Path: path})
+	c := api.NewSecretClient(s.ClientConn)
+	return c.Fingers(context.Background(), &api.FingersMessage{Path: path})
 }
 
 func (s *ClientConn) Close() {

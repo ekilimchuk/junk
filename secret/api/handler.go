@@ -1,22 +1,22 @@
 package api
 
 import (
-	"log"
+	"bufio"
 	"golang.org/x/net/context"
 	"io/ioutil"
-	"bufio"
+	"log"
 	"os"
 )
 
-type Server struct {}
+type Server struct{}
 
 func (s *Server) List(ctx context.Context, in *ListMessage) (*ListResult, error) {
 	log.Printf("Receive: list %s", in.Path)
 	files, err := ioutil.ReadDir(in.Path)
 	if err != nil {
-        log.Println(err)
+		log.Println(err)
 		return nil, err
-    }
+	}
 	list := make([]string, 0)
 	for _, f := range files {
 		list = append(list, f.Name())
@@ -43,9 +43,9 @@ func (s *Server) Fingers(ctx context.Context, in *FingersMessage) (*FingersResul
 	log.Printf("Receive: fingers - list rsa pub fingers.")
 	file, err := os.Open("./known_hosts")
 	if err != nil {
-        log.Println(err)
+		log.Println(err)
 		return nil, err
-    }
+	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	list := make([]string, 0)

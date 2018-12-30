@@ -1,11 +1,10 @@
 package main
 
 import (
-    "log"
-    "os"
 	"flag"
+	"log"
+	"os"
 )
-
 
 func StatusAction() {
 	dst := flag.String("dst", "", "is a remote dir name.")

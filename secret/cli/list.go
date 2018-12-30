@@ -1,8 +1,8 @@
 package main
 
 import (
-    "log"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -16,7 +16,7 @@ func ListAction() {
 		showListUsage()
 		os.Exit(1)
 	}
-	c, err := NewClient("", "8888");
+	c, err := NewClient("", "8888")
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

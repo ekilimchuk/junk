@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
-	"net"
 	"../api"
 	"google.golang.org/grpc"
+	"log"
+	"net"
 )
 
 func main() {

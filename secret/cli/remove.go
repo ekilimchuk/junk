@@ -1,11 +1,10 @@
 package main
 
 import (
-    "log"
-    "os"
 	"flag"
+	"log"
+	"os"
 )
-
 
 func RemoveAction() {
 	dst := flag.String("dst", "", "is a remote dir name.")
