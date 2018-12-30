@@ -8,7 +8,7 @@ import (
 
 func showListUsage() {
 	fmt.Println("Usage: ./secret-cli list")
-	fmt.Println("	shows all remote dirs.")
+	fmt.Println("\tshows all remote dirs.")
 }
 
 func ListAction() {

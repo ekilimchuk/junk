@@ -6,7 +6,7 @@ import (
 )
 
 func showUsage() {
-	fmt.Println("Usage: ./secret-cli <list|add|status|remove> -h")
+	fmt.Println("Usage: ./secret-cli <list|add|status|remove|fingers> -h")
 }
 
 func main() {
@@ -23,6 +23,8 @@ func main() {
 		RemoveAction()
 	case "status":
 		StatusAction()
+	case "fingers":
+		FingersAction()
 	default:
 		showUsage()
 		os.Exit(1)

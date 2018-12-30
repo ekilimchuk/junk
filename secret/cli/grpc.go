@@ -39,6 +39,11 @@ func (s *ClientConn) Status(path string) (*api.StatusMessage, error) {
     return c.Status(context.Background(), &api.StatusMessage{Path: path})
 }
 
+func (s *ClientConn) Fingers(path string) (*api.FingersResult, error) {
+    c := api.NewSecretClient(s.ClientConn)
+    return c.Fingers(context.Background(), &api.FingersMessage{Path: path})
+}
+
 func (s *ClientConn) Close() {
 	if s.ClientConn != nil {
 		s.ClientConn.Close()

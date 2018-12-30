@@ -4,6 +4,8 @@ import (
 	"log"
 	"golang.org/x/net/context"
 	"io/ioutil"
+	"bufio"
+	"os"
 )
 
 type Server struct {}
@@ -35,4 +37,24 @@ func (s *Server) Add(ctx context.Context, in *AddMessage) (*AddMessage, error) {
 func (s *Server) Status(ctx context.Context, in *StatusMessage) (*StatusMessage, error) {
 	log.Printf("Receive: %s", in.Path)
 	return &StatusMessage{Path: in.Path}, nil
+}
+
+func (s *Server) Fingers(ctx context.Context, in *FingersMessage) (*FingersResult, error) {
+	log.Printf("Receive: fingers - list rsa pub fingers.")
+	file, err := os.Open("./known_hosts")
+	if err != nil {
+        log.Println(err)
+		return nil, err
+    }
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	list := make([]string, 0)
+	for scanner.Scan() {
+		list = append(list, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return &FingersResult{Fingers: list}, nil
 }
