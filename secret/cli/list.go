@@ -21,7 +21,7 @@ func ListAction() {
 		log.Fatalf("%v", err)
 	}
 	defer c.Close()
-	response, err := c.List("./fmskfl")
+	response, err := c.List("./")
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
