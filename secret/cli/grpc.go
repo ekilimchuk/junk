@@ -23,9 +23,9 @@ func (s *ClientConn) List(path string) (*api.ListResult, error) {
 	return c.List(context.Background(), &api.ListMessage{Path: path})
 }
 
-func (s *ClientConn) Add(path string) (*api.AddMessage, error) {
+func (s *ClientConn) Add(dirName string, aesKey string, blob []byte) (*api.AddResult, error) {
 	c := api.NewSecretClient(s.ClientConn)
-	return c.Add(context.Background(), &api.AddMessage{Aeskey: path})
+	return c.Add(context.Background(), &api.AddMessage{Dirname: dirName, Aeskey: aesKey, Blob: blob})
 }
 
 func (s *ClientConn) Remove(path string) (*api.RemoveMessage, error) {

@@ -2,6 +2,7 @@ package api
 
 import (
 	"bufio"
+	"fmt"
 	"golang.org/x/net/context"
 	"io/ioutil"
 	"log"
@@ -11,8 +12,8 @@ import (
 type Server struct{}
 
 func (s *Server) List(ctx context.Context, in *ListMessage) (*ListResult, error) {
-	log.Printf("Receive: list %s", in.Path)
-	files, err := ioutil.ReadDir(in.Path)
+	log.Printf("Receive: list %s", "./tmp")
+	files, err := ioutil.ReadDir("./tmp")
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -29,9 +30,18 @@ func (s *Server) Remove(ctx context.Context, in *RemoveMessage) (*RemoveMessage,
 	return &RemoveMessage{Path: in.Path}, nil
 }
 
-func (s *Server) Add(ctx context.Context, in *AddMessage) (*AddMessage, error) {
-	log.Printf("Receive: %s", in.Aeskey)
-	return &AddMessage{Aeskey: in.Aeskey}, nil
+func (s *Server) Add(ctx context.Context, in *AddMessage) (*AddResult, error) {
+	log.Printf("Receive: %s %s", in.Aeskey, in.Dirname)
+	if err := os.Mkdir(fmt.Sprintf("./tmp/%s", in.Dirname), 0755); err != nil {
+		return &AddResult{Result: "Error: Add"}, err
+	}
+	if err := ioutil.WriteFile(fmt.Sprintf("./tmp/%s/key", in.Dirname), []byte(in.Aeskey), 0600); err != nil {
+		return &AddResult{Result: "Error: Add"}, err
+	}
+	if err := ioutil.WriteFile(fmt.Sprintf("./tmp/%s/blob", in.Dirname), in.Blob, 0600); err != nil {
+		return &AddResult{Result: "Error: Add"}, err
+	}
+	return &AddResult{Result: "Ok"}, nil
 }
 
 func (s *Server) Status(ctx context.Context, in *StatusMessage) (*StatusMessage, error) {

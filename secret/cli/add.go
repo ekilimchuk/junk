@@ -4,6 +4,7 @@ import (
 	"../util"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 )
@@ -19,5 +20,18 @@ func AddAction(server string) {
 	if err := util.Tar(*src, fmt.Sprintf("./%s.tar", *dst)); err != nil {
 		log.Fatalf("%v", err)
 	}
-	log.Printf("%s %s %s\n", *src, *dst, server)
+	c, err := NewClient(server)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	defer c.Close()
+	file, err := ioutil.ReadFile(fmt.Sprintf("./%s.tar", *dst))
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	response, err := c.Add(*dst, "qwerty12", file)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	fmt.Printf("%s\n", response.Result)
 }

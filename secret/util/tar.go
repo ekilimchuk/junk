@@ -35,7 +35,7 @@ func Tar(src string, dst string) error {
 	if err != nil {
 		return err
 	}
-	tarFile, err := os.Create(fmt.Sprintf("./%s.tar", dst))
+	tarFile, err := os.Create(fmt.Sprintf("./%s", dst))
 	if err != nil {
 		return err
 	}
