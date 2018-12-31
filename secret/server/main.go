@@ -2,10 +2,10 @@ package main
 
 import (
 	"../api"
+	"../util"
 	"google.golang.org/grpc"
 	"log"
 	"net"
-	"../util"
 )
 
 const (

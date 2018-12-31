@@ -1,10 +1,10 @@
 package main
 
 import (
+	"../util"
 	"fmt"
 	"log"
 	"os"
-	"../util"
 )
 
 const (
