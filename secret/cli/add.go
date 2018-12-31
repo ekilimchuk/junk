@@ -1,7 +1,9 @@
 package main
 
 import (
+	"../util"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 )
@@ -13,6 +15,9 @@ func AddAction(server string) {
 	if *src == "" || *dst == "" {
 		flag.PrintDefaults()
 		os.Exit(1)
+	}
+	if err := util.Tar(*src, fmt.Sprintf("./%s.tar", *dst)); err != nil {
+		log.Fatalf("%v", err)
 	}
 	log.Printf("%s %s %s\n", *src, *dst, server)
 }

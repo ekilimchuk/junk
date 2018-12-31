@@ -1,18 +1,14 @@
 package util
 
 import (
-	"crypto/x509"
+	"crypto/rand"
 	"crypto/rsa"
-	"io/ioutil"
+	"crypto/sha256"
+	"crypto/x509"
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"crypto/rand"
-	"crypto/sha256"
-)
-
-const (
-	KeyAlgoRSA = "ssh-rsa"
+	"io/ioutil"
 )
 
 func LoadPrivateKey(filePath string) (*rsa.PrivateKey, error) {
@@ -48,7 +44,7 @@ func LoadPublicKey(filePath string) (*rsa.PublicKey, error) {
 	}
 	parsedKey, err := x509.ParsePKCS1PublicKey(pubPem.Bytes)
 	if err != nil {
-			return nil, errors.New(fmt.Sprintf("%v - %s", err, filePath))
+		return nil, errors.New(fmt.Sprintf("%v - %s", err, filePath))
 	}
 	return parsedKey, nil
 }
