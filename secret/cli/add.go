@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func AddAction() {
+func AddAction(server string) {
 	src := flag.String("src", "", "is a source dir path.")
 	dst := flag.String("dst", "", "is a remote dir name.")
 	flag.CommandLine.Parse(os.Args[2:])
@@ -14,5 +14,5 @@ func AddAction() {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
-	log.Printf("%s %s\n", *src, *dst)
+	log.Printf("%s %s %s\n", *src, *dst, server)
 }

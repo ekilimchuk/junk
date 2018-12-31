@@ -11,12 +11,12 @@ func showFingersUsage() {
 	fmt.Println("\tshows all remote rsa pub fingers.")
 }
 
-func FingersAction() {
+func FingersAction(server string) {
 	if len(os.Args) > 2 {
 		showListUsage()
 		os.Exit(1)
 	}
-	c, err := NewClient("", "8888")
+	c, err := NewClient(server)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

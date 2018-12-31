@@ -2,7 +2,6 @@ package main
 
 import (
 	"../api"
-	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -11,8 +10,8 @@ type ClientConn struct {
 	*grpc.ClientConn
 }
 
-func NewClient(addrs string, port string) (*ClientConn, error) {
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", addrs, port), grpc.WithInsecure())
+func NewClient(server string) (*ClientConn, error) {
+	conn, err := grpc.Dial(server, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
