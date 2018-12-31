@@ -1,4 +1,4 @@
-# Secret-server
+# Secret-server with GRPC interface.
 ## Build
 ```
 $ make
@@ -23,8 +23,13 @@ $ ./secret-gen-keys -private ./keys/client_private_key.pem -public ./keys/client
 $ ./secret-server 
 ```
 
-## Use client:
+## Use client (uplaod secrets to a secret-server):
 ```
 $ ./secret-cli -h
+```
+
+## Use agent (sync secrets to a local host from a secret-server):
+```
+$ ./secret-agent -h
 ```
 
