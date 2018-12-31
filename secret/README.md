@@ -18,7 +18,7 @@ $ ./secret-gen-keys -private ./keys/server_private_key.pem -public ./keys/server
 $ ./secret-gen-keys -private ./keys/client_private_key.pem -public ./keys/client_public_key.pem
 ```
 
-##Run server:
+## Run server:
 ```
 $ ./secret-server 
 ```
