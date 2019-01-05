@@ -25,6 +25,14 @@ type CliConfig struct {
 	ClientPublicKey  string
 }
 
+type AgentConfig struct {
+	Server           string
+	ServerPublicKey  string
+	AgentToken      string
+	AgentPrivateKey string
+	AgentPublicKey  string
+}
+
 func (c *ServerConfig) load(filePath string) error {
 	bytes, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -37,6 +45,17 @@ func (c *ServerConfig) load(filePath string) error {
 }
 
 func (c *CliConfig) load(filePath string) error {
+	bytes, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal([]byte(bytes), c); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *AgentConfig) load(filePath string) error {
 	bytes, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return err
