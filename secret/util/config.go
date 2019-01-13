@@ -26,8 +26,8 @@ type CliConfig struct {
 }
 
 type AgentConfig struct {
-	Server           string
-	ServerPublicKey  string
+	Server          string
+	ServerPublicKey string
 	AgentToken      string
 	AgentPrivateKey string
 	AgentPublicKey  string

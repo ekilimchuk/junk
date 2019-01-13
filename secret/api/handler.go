@@ -44,6 +44,21 @@ func (s *Server) Add(ctx context.Context, in *AddMessage) (*AddResult, error) {
 	return &AddResult{Result: "Ok"}, nil
 }
 
+func (s *Server) Sync(ctx context.Context, in *SyncMessage) (*SyncResult, error) {
+	log.Printf("Receive: %s", in.Dirname)
+	key, err := ioutil.ReadFile(fmt.Sprintf("./tmp/%s/key", in.Dirname))
+	if err != nil {
+		log.Printf("Warrning: %v", err)
+		return &SyncResult{Aeskey: []byte(""), Blob: []byte("")}, err
+	}
+	blob, err := ioutil.ReadFile(fmt.Sprintf("./tmp/%s/blob", in.Dirname))
+	if err != nil {
+		log.Printf("Warrning: %v", err)
+		return &SyncResult{Aeskey: []byte(""), Blob: []byte("")}, err
+	}
+	return &SyncResult{Aeskey: key, Blob: blob}, nil
+}
+
 func (s *Server) Status(ctx context.Context, in *StatusMessage) (*StatusMessage, error) {
 	log.Printf("Receive: %s", in.Path)
 	return &StatusMessage{Path: in.Path}, nil

@@ -51,3 +51,34 @@ func Tar(src string, dst string) error {
 	}
 	return nil
 }
+
+func Untar(dst string, r io.Reader) error {
+	tr := tar.NewReader(r)
+	for {
+		header, err := tr.Next()
+		switch {
+		case err == io.EOF:
+			return nil
+		case err != nil:
+			return nil
+		case header == nil:
+			continue
+		}
+		target := fmt.Sprintf("%s/%s", dst, header.Name)
+		switch header.Typeflag {
+		case tar.TypeDir:
+			if err := os.MkdirAll(target, 0755); err != nil {
+				return err
+			}
+		case tar.TypeReg:
+			f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, os.FileMode(header.Mode))
+			if err != nil {
+				return err
+			}
+			if _, err := io.Copy(f, tr); err != nil {
+				return err
+			}
+			f.Close()
+		}
+	}
+}

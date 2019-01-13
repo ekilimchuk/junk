@@ -6,7 +6,7 @@ import (
 )
 
 type Keys struct {
-	ServerPublicKey  *rsa.PublicKey
+	ServerPublicKey *rsa.PublicKey
 	AgentToken      string
 	AgentPrivateKey *rsa.PrivateKey
 	AgentPublicKey  *rsa.PublicKey

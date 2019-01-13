@@ -23,6 +23,11 @@ func (s *ClientConn) List(path string) (*api.ListResult, error) {
 	return c.List(context.Background(), &api.ListMessage{Path: path})
 }
 
+func (s *ClientConn) Sync(dir string) (*api.SyncResult, error) {
+	c := api.NewSecretClient(s.ClientConn)
+	return c.Sync(context.Background(), &api.SyncMessage{Dirname: dir})
+}
+
 func (s *ClientConn) Close() {
 	if s.ClientConn != nil {
 		s.ClientConn.Close()
