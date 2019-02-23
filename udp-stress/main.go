@@ -36,7 +36,7 @@ func run(count int, hosts []string, proto string) {
 			defer wg.Done()
 			for {
 				for _, host := range hosts {
-					port := rand.Intn(maxPort) + minPort + 1
+					port := rand.Intn(maxPort-minPort) + minPort + 1
 					conn, err := net.Dial(proto, fmt.Sprintf("%s:%d", host, port))
 					if err != nil {
 						fmt.Printf("%s:%d - %v\n", host, port, err)
