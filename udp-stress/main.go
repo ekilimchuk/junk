@@ -3,10 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
+	"math/rand"
 	"net"
 	"os"
 	"strings"
 	"sync"
+)
+
+const (
+	minPort = 1024
+	maxPort = 32768
 )
 
 var (
@@ -30,7 +36,7 @@ func run(count int, hosts []string, proto string) {
 			defer wg.Done()
 			for {
 				for _, host := range hosts {
-					port := 1024
+					port := rand.Intn(maxPort) + minPort + 1
 					conn, err := net.Dial(proto, fmt.Sprintf("%s:%d", host, port))
 					if err != nil {
 						fmt.Printf("%s:%d - %v\n", host, port, err)
