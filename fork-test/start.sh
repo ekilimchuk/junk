@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/sh
 
 logfile="./start.log"
 pidfile="./start.pid"
