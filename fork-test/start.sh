@@ -1,5 +1,6 @@
 #!/bin/sh
 
+telegraf_user="telegraf"
 logfile="./start.log"
 pidfile="./start.pid"
 
