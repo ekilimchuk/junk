@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	pwd, _ := os.Getwd()
+	pwd := os.Getenv("PWD")
 
 	for i := uint64(0); i <= math.MaxUint64; i++ {
 		if i > math.MaxInt {
