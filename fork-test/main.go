@@ -14,7 +14,9 @@ func worker(n uint32, results chan<- string) {
 		if i > math.MaxInt {
 			results <- fmt.Sprintf("Worker %v int overflow!")
 		}
-		results <- fmt.Sprintf("%v %v", n, i)
+		if i%1000 == 0 {
+			results <- fmt.Sprintf("%v %v", n, i)
+		}
 		cmd := exec.Command(pwd + "/script.sh")
 		if err := cmd.Run(); err != nil {
 			log.Fatal(err)
