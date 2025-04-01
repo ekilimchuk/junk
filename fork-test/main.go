@@ -25,7 +25,7 @@ func worker(n uint32, results chan<- string) {
 }
 
 func main() {
-	workersCount := uint32(64)
+	workersCount := uint32(200)
 	results := make(chan string)
 	for n := uint32(0); n <= workersCount; n++ {
 		go worker(n, results)
