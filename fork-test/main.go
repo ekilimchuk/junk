@@ -12,9 +12,9 @@ func worker(n uint32, results chan<- string) {
 	pwd := os.Getenv("PWD")
 	for i := uint64(0); i <= math.MaxUint64; i++ {
 		if i > math.MaxInt {
-			results <- fmt.Sprintf("Worker %v int overflow!\n")
+			results <- fmt.Sprintf("Worker %v int overflow!")
 		}
-		results <- fmt.Sprintf("Worker %v iter %v\n", n, i)
+		results <- fmt.Sprintf("Worker %v iter %v", n, i)
 		cmd := exec.Command(pwd + "/script.sh")
 		if err := cmd.Run(); err != nil {
 			log.Fatal(err)
