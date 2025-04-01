@@ -14,7 +14,7 @@ func worker(n uint32, results chan<- string) {
 		if i > math.MaxInt {
 			results <- fmt.Sprintf("Worker %v int overflow!")
 		}
-		results <- fmt.Sprintf("Worker %v iter %v", n, i)
+		results <- fmt.Sprintf("%v %v", n, i)
 		cmd := exec.Command(pwd + "/script.sh")
 		if err := cmd.Run(); err != nil {
 			log.Fatal(err)
@@ -23,7 +23,7 @@ func worker(n uint32, results chan<- string) {
 }
 
 func main() {
-	workersCount := uint32(1024)
+	workersCount := uint32(64)
 	results := make(chan string)
 	for n := uint32(0); n <= workersCount; n++ {
 		go worker(n, results)
